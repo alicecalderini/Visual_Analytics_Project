@@ -1,0 +1,1491 @@
+[
+  {
+    "initiative_id":"fish_vacuum_Meeting_1_Introduction",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Useful for fishing operations but may have environmental concerns.",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"fish_vacuum_Meeting_1_Introduction",
+    "entity_id":"High Seas Fishing Inc.",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"Small vessels are the backbone of the company, and this improves operations.",
+    "industry":[
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"fish_vacuum_Meeting_1_Introduction",
+    "entity_id":"Bay Harvest Corporation",
+    "entity_type":"entity.organization",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"fish_vacuum_Meeting_1_Introduction",
+    "entity_id":"Seal",
+    "entity_type":"entity.person",
+    "sentiment":0.0,
+    "reason":"Balanced view on new technology applications.",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"deep_fishing_dock_Meeting_3_Maintenance_Plan",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"deep_fishing_dock_Meeting_3_Maintenance_Plan",
+    "entity_id":"Industrial Shipping",
+    "entity_type":"entity.organization",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"low_volume_crane_Travel_Harbor_Builders",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Supports small-scale operations, which align with small vessel activities and tourism. Tourism is increasingly focused on small scale pictureque fishing",
+    "industry":[
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_9_Invite_Developers",
+    "entity_id":"Builders Association",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"Supports affordable housing for workers, which benefits large vessel operations.",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_9_Invite_Developers",
+    "entity_id":"Industrial Shipping",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"Supports affordable housing for workers, which benefits large vessel operations.",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"marine_life_deck_Meeting_12_Environmental_Impact_Report",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":-0.5,
+    "reason":"Prefers resources to be allocated toward the fishing industry.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"heritage_walking_tour_Meeting_9_Report",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Believes it will enhance the cultural appeal and attract more visitors.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"heritage_walking_tour_Meeting_9_Take_Action",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Believes it will enhance the cultural appeal and attract more visitors.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"waterfront_market_Meeting_9_Report",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Strongly supports as it could benefit small vessel",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"new_crane_lomark_Meeting_4_Cost_Analysis",
+    "entity_id":"Industrial Shipping",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"Primarily benefits large vessel operations, which are essential for the organization.",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"new_crane_lomark_Meeting_4_Cost_Analysis",
+    "entity_id":"Tours Central Ticketing",
+    "entity_type":"entity.organization",
+    "sentiment":-1.0,
+    "reason":"Primarily benefits fishing operations, not tourism.",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"new_crane_lomark_Meeting_4_Cost_Analysis",
+    "entity_id":"Saltwater Serenades",
+    "entity_type":"entity.organization",
+    "sentiment":-1.0,
+    "reason":"Primarily benefits fishing operations, not tourism.",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"deep_fishing_dock_Meeting_4_Findings_Report",
+    "entity_id":"Industrial Shipping",
+    "entity_type":"entity.organization",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"deep_fishing_dock_Meeting_4_Findings_Report",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"name_harbor_area_Meeting_14_Finalize_Name",
+    "entity_id":"Sean",
+    "entity_type":"entity.person",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_harbor_area_Meeting_14_Finalize_Name",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_8_Feedback",
+    "entity_id":"Industrial Shipping",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"Supports affordable housing for workers, which benefits large vessel operations.",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_8_Feedback",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Feels committee should be doing more for blue-collar workers. Nephew is having trouble finding housing",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"fish_vacuum_Meeting_3_Report",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Useful for fishing operations but may have environmental concerns.",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"affordable_housing_Travel_Tidewater_Flats",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Strongly supports affordable housing for workers.",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"name_harbor_area_Meeting_12_Public_Opinion",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":0.0,
+    "reason":"Supportive but also feels it is a distraction",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"renaming_park_himark_Meeting_4_Name_Ideas",
+    "entity_id":"PTA",
+    "entity_type":"entity.organization",
+    "sentiment":0.0,
+    "reason":"Symbolic gesture with no direct impact on children or education.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"renaming_park_himark_Meeting_4_Name_Ideas",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_inspection_office_Travel_Lomark_Civic_Plaza",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_inspection_office_Travel_Lomark_Civic_Plaza",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.0,
+    "reason":"Symbolic gesture with no direct impact on tourism or vessel operations.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"marine_life_deck_Meeting_11_Feedback",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Sees educational value but concerned about sustainable funding.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_inspection_office_Meeting_8_Importance",
+    "entity_id":"High Seas Fishing Inc.",
+    "entity_type":"entity.organization",
+    "sentiment":0.0,
+    "reason":"Symbolic gesture with no direct impact on fishing or vessel operations.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"fish_vacuum_Meeting_2_Cost_Benefit_Analysis",
+    "entity_id":"High Seas Fishing Inc.",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"Small vessels are the backbone of the company, and this improves operations.",
+    "industry":[
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"marine_life_deck_Meeting_12_Detailed_Proposal",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Strongly supports as it could be a major attraction, benefiting tourism.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_7_Debate",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":-1.0,
+    "reason":"Conflicts with tourism-focused short-term rentals",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_7_Debate",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Feels committee should be doing more for blue-collar workers. Nephew is having trouble finding housing",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"seafood_festival_Meeting_3_Report",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Supports as it boosts local economy and community connection.",
+    "industry":[
+      "tourism",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_harbor_area_Meeting_10_Historical_Significance",
+    "entity_id":"Daughters of Port Grove",
+    "entity_type":"entity.organization",
+    "sentiment":0.0,
+    "reason":"Symbolic gesture with no direct impact on tourism or vessel operations.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"seafood_festival_Meeting_1_Feasibility",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Sees great potential in drawing tourists and celebrating local cuisine.",
+    "industry":[
+      "tourism",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"seafood_festival_Meeting_1_Feasibility",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Supports as it offers community and economic benefits.",
+    "industry":[
+      "tourism",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"seafood_festival_Meeting_1_Feasibility",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Supports as it boosts local economy and community connection.",
+    "industry":[
+      "tourism",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"seafood_festival_Travel_Dock_Roll_Hall_of_Fame",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Supports as it offers community and economic benefits.",
+    "industry":[
+      "tourism",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"concert_Meeting_7_Concert_Issues",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Believes concerts can bring community together but cautious about potential disruptions.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"concert_Meeting_7_Concert_Issues",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Believes concerts can bring community together but cautious about potential disruptions.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"name_harbor_area_Travel_Harbor_Odyssey_Tours",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_inspection_office_Meeting_9_Community_Vote",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":0.0,
+    "reason":"Supportive but also feels it is a distraction",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"deep_fishing_dock_Travel_High_Seas_Fishing_Inc",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"renaming_park_himark_Travel_Sailors_Perch_Light",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Travel_Harbor_Route_Solutions",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Supports tourism growth",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"heritage_walking_tour_Meeting_8_Proposal",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Believes it will enhance the cultural appeal and attract more visitors.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_harbor_area_Meeting_11_Draft_Names",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"concert_Meeting_16_Road_Closures",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Believes concerts can bring community together but cautious about potential disruptions.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"marine_life_deck_Meeting_10_Initial_Ideas",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Strongly supports as it could be a major attraction, benefiting tourism.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"marine_life_deck_Meeting_10_Initial_Ideas",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Sees educational value but concerned about sustainable funding.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"statue_john_smoth_Meeting_9_Feedback",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"renaming_park_himark_Meeting_5_Nominations",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Symbolic gesture that could attract tourists and improve community pride.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"heritage_walking_tour_Meeting_7_Outline",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Believes it will enhance the cultural appeal and attract more visitors.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"heritage_walking_tour_Meeting_7_Outline",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Believes it will highlight local history and attract tourists, without being high in cost.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"heritage_walking_tour_Meeting_7_Outline",
+    "entity_id":"Daughters of Port Grove",
+    "entity_type":"entity.organization",
+    "sentiment":0.5,
+    "reason":"Believes it will enhance the cultural appeal and attract more visitors.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"statue_john_smoth_Meeting_8_Proposal",
+    "entity_id":"Daughters of Port Grove",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"Historical recognition aligns with tourism interests.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"statue_john_smoth_Meeting_8_Proposal",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"new_crane_lomark_Meeting_8_Share_Findings",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Essential for improving efficiency in fishing operations.",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"name_inspection_office_Meeting_8_Proposal",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.0,
+    "reason":"Symbolic gesture with no direct impact on tourism or vessel operations.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_inspection_office_Meeting_8_Proposal",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"affordable_housing_Travel_Waveside_Townhomes",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":-1.0,
+    "reason":"Conflicts with tourism-focused short-term rentals",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"affordable_housing_Travel_Waveside_Townhomes",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Feels committee should be doing more for blue-collar workers. Nephew is having trouble finding housing",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"heritage_walking_tour_Travel_Captain_Market",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Believes it will enhance the cultural appeal and attract more visitors.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"renaming_park_himark_Meeting_7_Unveiling_Event",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"waterfront_market_Travel_Harborfront_Market",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.25,
+    "reason":"Cautious but open to evaluating the benefits.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"new_crane_lomark_Travel_Blue_Wave_Shipping",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":-0.5,
+    "reason":"Primarily benefits large vessel operations, with limited relevance to tourism",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"renaming_park_himark_Travel_Himark_City_Hall",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Symbolic gesture that could attract tourists and improve community pride.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"statue_john_smoth_Travel_The_Bait_Stich",
+    "entity_id":"Seal",
+    "entity_type":"entity.person",
+    "sentiment":0.2,
+    "reason":"Appreciates historical recognition but sees limited practical benefit.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"statue_john_smoth_Travel_The_Bait_Stich",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Meeting_9_Report",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":-0.5,
+    "reason":"Seen as prioritizing tourism over fishing-related infrastructure.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Meeting_9_Report",
+    "entity_id":"Seal",
+    "entity_type":"entity.person",
+    "sentiment":0.1,
+    "reason":"Seems like headache, but if other people are willing to do the work.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"concert_Meeting_16_Feedback",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Believes concerts can bring community together but cautious about potential disruptions.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"concert_Travel_Paakland_Elementary",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Believes concerts can bring community together but cautious about potential disruptions.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_harbor_area_Meeting_11_Harbor_Odyssey_Tours",
+    "entity_id":"Harbor Odyssey Tours",
+    "entity_type":"entity.organization",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"seafood_festival_Meeting_3_Take_Action",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Sees great potential in drawing tourists and celebrating local cuisine.",
+    "industry":[
+      "tourism",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_10_Housing_Proposal",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Feels committee should be doing more for blue-collar workers. Nephew is having trouble finding housing",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"waterfront_market_Meeting_7_Benefits_Feasibility",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Supports as it aligns well with tourism and local economic growth.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"waterfront_market_Meeting_7_Benefits_Feasibility",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Strongly supports as it aligns with community and economic interests.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"waterfront_market_Meeting_7_Benefits_Feasibility",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.25,
+    "reason":"Cautious but open to evaluating the benefits.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"waterfront_market_Meeting_7_Benefits_Feasibility",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Strongly supports as it could benefit small vessel",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"waterfront_market_Travel_Harbor_Edge_Grill",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Strongly supports as it aligns with community and economic interests.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"renaming_park_himark_Meeting_8_Compile_Nominations",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"low_volume_crane_Travel_Haacklee_Assembly_Co",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Supports small-scale operations, which align with small vessel activities and tourism. Tourism is increasingly focused on small scale pictureque fishing",
+    "industry":[
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"statue_john_smoth_Meeting_10_Presentation",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"renaming_park_himark_Meeting_7_Announce_Name",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_harbor_area_Travel_The_Bait_Stich",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"low_volume_crane_Meeting_8_Report",
+    "entity_id":"Seal",
+    "entity_type":"entity.person",
+    "sentiment":0.1,
+    "reason":"Recognizes the crane's benefit to small-scale operations.",
+    "industry":[
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"marine_life_deck_Travel_Tropics_Environmental_Hub",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Sees educational value but concerned about sustainable funding.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"waterfront_market_Meeting_8_Gather_Feedback",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.25,
+    "reason":"Cautious but open to evaluating the benefits.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"renaming_park_himark_Travel_Anchor_Way_Grill",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"fish_vacuum_Travel_Bay_Harvest_Corporation",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":-0.1,
+    "reason":"Would rather see money go to tourism initiatives",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"concert_Travel_Harborfront_Market",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Believes concerts can bring community together but cautious about potential disruptions.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_6_Sites_Proposal",
+    "entity_id":"Builders Association",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"Supports affordable housing for workers, which benefits large vessel operations.",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"affordable_housing_Meeting_6_Sites_Proposal",
+    "entity_id":"Saltwater Serenades",
+    "entity_type":"entity.organization",
+    "sentiment":-1.0,
+    "reason":"Conflicts with tourism-focused short-term rentals.",
+    "industry":[
+      "large vessel",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"deep_fishing_dock_Meeting_4_Recommendation",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"seafood_festival_Meeting_2_Feedback",
+    "entity_id":"Carol Limpet",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Supports as it offers community and economic benefits.",
+    "industry":[
+      "tourism",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"seafood_festival_Meeting_2_Feedback",
+    "entity_id":"Simone Kat",
+    "entity_type":"entity.person",
+    "sentiment":0.75,
+    "reason":"Sees great potential in drawing tourists and celebrating local cuisine.",
+    "industry":[
+      "tourism",
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"concert_Meeting_16_Communication_Complaints",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":0.5,
+    "reason":"Believes concerts can bring community together but cautious about potential disruptions.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"name_inspection_office_Meeting_14_Announcement",
+    "entity_id":"Tante Titan",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Loves ceremonial gestures and believes they can have a positive impact.",
+    "industry":[
+
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "initiative_id":"new_crane_lomark_Meeting_5_Cost_Impact_Report",
+    "entity_id":"Teddy Goldstein",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Essential for improving efficiency in fishing operations.",
+    "industry":[
+      "large vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"low_volume_crane_Meeting_3_Proposal",
+    "entity_id":"Ed Helpsford",
+    "entity_type":"entity.person",
+    "sentiment":1.0,
+    "reason":"Beneficial for small time fishers, who he feels are often overlooked",
+    "industry":[
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"low_volume_crane_Travel_Harbor_Route_Solutions",
+    "entity_id":"Seal",
+    "entity_type":"entity.person",
+    "sentiment":0.1,
+    "reason":"Recognizes the crane's benefit to small-scale operations.",
+    "industry":[
+      "small vessel"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"deep_fishing_dock_Meeting_2_Importance_Discussion",
+    "entity_id":"High Seas Fishing Inc.",
+    "entity_type":"entity.organization",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"deep_fishing_dock_Meeting_2_Importance_Discussion",
+    "entity_id":"Tours Central Ticketing",
+    "entity_type":"entity.organization",
+    "sentiment":null,
+    "reason":null,
+    "industry":[
+
+    ],
+    "opinion_recorded":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Meeting_7_Initial_Views_Discussion",
+    "entity_id":"Tours Central Ticketing",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"More tourism so more tickets sold.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Meeting_7_Initial_Views_Discussion",
+    "entity_id":"Paackland Container Inc.",
+    "entity_type":"entity.organization",
+    "sentiment":-0.5,
+    "reason":"Tourism is a competitor for the same resources.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Meeting_7_Initial_Views_Discussion",
+    "entity_id":"Seal",
+    "entity_type":"entity.person",
+    "sentiment":0.1,
+    "reason":"Seems like headache, but if other people are willing to do the work.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Meeting_8_Expand_Ideas_Discussion",
+    "entity_id":"Tours Central Ticketing",
+    "entity_type":"entity.organization",
+    "sentiment":1.0,
+    "reason":"More tourism so more tickets sold.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Meeting_8_Expand_Ideas_Discussion",
+    "entity_id":"Paackland Container Inc.",
+    "entity_type":"entity.organization",
+    "sentiment":-0.5,
+    "reason":"Tourism is a competitor for the same resources.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "initiative_id":"expanding_tourist_wharf_Meeting_8_Expand_Ideas_Discussion",
+    "entity_id":"Seal",
+    "entity_type":"entity.person",
+    "sentiment":0.1,
+    "reason":"Seems like headache, but if other people are willing to do the work.",
+    "industry":[
+      "tourism"
+    ],
+    "opinion_recorded":true,
+    "in_filah":true,
+    "in_trout":true
+  }
+]

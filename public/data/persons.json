@@ -1,0 +1,65 @@
+[
+  {
+    "id":"Seal",
+    "name":"Seal",
+    "role":"Committee Chair",
+    "role_note":null,
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Ed Helpsford",
+    "name":"Ed Helpsford",
+    "role":"Vice Chair",
+    "role_note":null,
+    "type_inferred":false,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "id":"Teddy Goldstein",
+    "name":"Teddy Goldstein",
+    "role":"Treasurer",
+    "role_note":null,
+    "type_inferred":false,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "id":"Simone Kat",
+    "name":"Simone Kat",
+    "role":"Member",
+    "role_note":null,
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Tante Titan",
+    "name":"Tante Titan",
+    "role":"Member",
+    "role_note":null,
+    "type_inferred":false,
+    "in_filah":false,
+    "in_trout":true
+  },
+  {
+    "id":"Carol Limpet",
+    "name":"Carol Limpet",
+    "role":"Member",
+    "role_note":null,
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Sean",
+    "name":"Sean",
+    "role":null,
+    "role_note":"non e' uno dei 6 membri ufficiali COOTEFOO - identita' incerta",
+    "type_inferred":true,
+    "in_filah":false,
+    "in_trout":false
+  }
+]

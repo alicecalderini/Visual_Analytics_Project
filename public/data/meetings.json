@@ -1,0 +1,98 @@
+[
+  {
+    "id":"Meeting_1",
+    "date_label":"Meeting 1",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_2",
+    "date_label":"Meeting 2",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_3",
+    "date_label":"Meeting 3",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_4",
+    "date_label":"Meeting 4",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_5",
+    "date_label":"Meeting 5",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_6",
+    "date_label":"Meeting 6",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_7",
+    "date_label":"Meeting 7",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_8",
+    "date_label":"Meeting 8",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_9",
+    "date_label":"Meeting 9",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_10",
+    "date_label":"Meeting 10",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_11",
+    "date_label":"Meeting 11",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_12",
+    "date_label":"Meeting 12",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Meeting_13",
+    "date_label":"07-03-40",
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "id":"Meeting_14",
+    "date_label":"Meeting 14",
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "id":"Meeting_15",
+    "date_label":"07-17-40",
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "id":"Meeting_16",
+    "date_label":"Meeting 16",
+    "in_filah":false,
+    "in_trout":true
+  }
+]

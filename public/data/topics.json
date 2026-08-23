@@ -1,0 +1,107 @@
+[
+  {
+    "id":"expanding_tourist_wharf",
+    "short_topic":"expanding_tourist_wharf",
+    "long_topic":"Expanding the tourist wharf\/infrastructure in Haacklee",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"statue_john_smoth",
+    "short_topic":"statue_john_smoth",
+    "long_topic":"Statue to honor John Smoth in Port Grove",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"deep_fishing_dock",
+    "short_topic":"deep_fishing_dock",
+    "long_topic":"Deep maintenance to the commercial fishing dock at Himark",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"new_crane_lomark",
+    "short_topic":"new_crane_lomark",
+    "long_topic":"Money for a new crane at Lomark",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"fish_vacuum",
+    "short_topic":"fish_vacuum",
+    "long_topic":"Fish Vacuum",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"low_volume_crane",
+    "short_topic":"low_volume_crane",
+    "long_topic":"Low-volume unload crane in Haacklee",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"affordable_housing",
+    "short_topic":"affordable_housing",
+    "long_topic":"Affordable housing for fishing workers (conflict with short-term rentals)",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"renaming_park_himark",
+    "short_topic":"renaming_park_himark",
+    "long_topic":"Renaming a park in Himark",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"name_harbor_area",
+    "short_topic":"name_harbor_area",
+    "long_topic":"Putting a name on pictureque harbor area in Port Grove",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"name_inspection_office",
+    "short_topic":"name_inspection_office",
+    "long_topic":"Putting a name on the inspection office in Lomark",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"marine_life_deck",
+    "short_topic":"marine_life_deck",
+    "long_topic":"Establishing a Marine Life Observation Deck in Centralia",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"seafood_festival",
+    "short_topic":"seafood_festival",
+    "long_topic":"Hosting an Annual Seafood Festival in Paackland",
+    "in_filah":true,
+    "in_trout":false
+  },
+  {
+    "id":"heritage_walking_tour",
+    "short_topic":"heritage_walking_tour",
+    "long_topic":"Developing a Heritage Walking Tour in Haacklee",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"waterfront_market",
+    "short_topic":"waterfront_market",
+    "long_topic":"Establishing a Waterfront Market in Haacklee",
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"concert",
+    "short_topic":"concert",
+    "long_topic":"Plan for Concert",
+    "in_filah":false,
+    "in_trout":true
+  }
+]

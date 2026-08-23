@@ -1,0 +1,62 @@
+[
+  {
+    "id":"Paackland Container Inc.",
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"High Seas Fishing Inc.",
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Tours Central Ticketing",
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Saltwater Serenades",
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Daughters of Port Grove",
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Industrial Shipping",
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Builders Association",
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"PTA",
+    "type_inferred":false,
+    "in_filah":true,
+    "in_trout":true
+  },
+  {
+    "id":"Bay Harvest Corporation",
+    "type_inferred":true,
+    "in_filah":false,
+    "in_trout":false
+  },
+  {
+    "id":"Harbor Odyssey Tours",
+    "type_inferred":true,
+    "in_filah":false,
+    "in_trout":false
+  }
+]
