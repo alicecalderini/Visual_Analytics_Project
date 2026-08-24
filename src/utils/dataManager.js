@@ -30,9 +30,9 @@ export const getInitiatives = makeLoader('initiatives.json')
 export const getInitiativeStatusTimeline = makeLoader('initiative_status_timeline.json')
 export const getInitiativeParticipants = makeLoader('initiative_participants.json')
 
-// --- File geografici ---
-export const getOceanusGeo = makeLoader('raw_data/oceanus_map.geojson')  // era: makeLoader('oceanus_map.geojson')
-export const getRoadMap = makeLoader('raw_data/road_map.json')            // era: makeLoader('road_map.json')
+// --- File geografici (nella sottocartella raw_data) ---
+export const getOceanusGeo = makeLoader('raw_data/oceanus_map.geojson')
+export const getRoadMap = makeLoader('raw_data/road_map.json')
 
 /**
  * Carica in parallelo tutte le tabelle passate (per array di nomi logici) invece di

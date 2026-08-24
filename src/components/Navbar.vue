@@ -2,10 +2,9 @@
 import { RouterLink } from 'vue-router'
 
 const links = [
-  { to: '/', label: 'Overview' },
-  { to: '/bias-explorer', label: 'Bias Explorer' },
-  { to: '/comparison', label: 'FILAH vs TROUT vs Journalist' },
-  { to: '/person-profile', label: 'Profilo persona' },
+  { to: '/', label: 'Membri COOTEFOO' },
+  { to: '/map', label: 'Mappa e spostamenti' },
+  { to: '/balance', label: 'La bilancia' },
 ]
 </script>
 
