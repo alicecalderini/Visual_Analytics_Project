@@ -1,21 +1,18 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { getTrips } from '../utils/dataManager'
-
-const nTrips = ref(null)
-
-onMounted(async () => {
-  const trips = await getTrips()
-  nTrips.value = trips.length
-})
+import FilterSidebar from '../components/FilterSidebar.vue'
+import TripsByZone from '../components/TripsByZone.vue'
+import TripTimeline from '../components/TripTimeline.vue'
+import OceanusMap from '../components/OceanusMap.vue'
 </script>
 
 <template>
-  <div class="p-8">
-    <h1 class="text-2xl font-bold mb-2">Mappa e spostamenti</h1>
-    <p class="text-slate-600">Hello world 👋</p>
-    <p class="text-sm text-slate-400 mt-2">
-      (test caricamento dati) trip trovati in trips.json: {{ nTrips }}
-    </p>
+  <div class="flex h-full">
+    <FilterSidebar />
+
+    <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+      <TripsByZone />
+      <TripTimeline />
+      <OceanusMap />
+    </div>
   </div>
 </template>
