@@ -2,48 +2,67 @@
 /**
  * TopicSentimentHeatmap
  * ----------------------
- * Heatmap: righe = persone/organizzazioni, colonne = topic, colore = sentiment medio
- * (deduplicato per (entita, topic) tramite utils/personTopicSentiment.js - se la
- * stessa persona ha piu' iniziative sullo stesso topic, conta una volta sola).
+ * Vista compatta: il toggle "Per topic / Per industria" sta accanto al titolo.
+ * I filtri secondari (Mostra, Filtra topic) stanno in fondo.
  *
- * Controlli:
- *  - dataset attivo (journalist / FILAH / TROUT), condiviso globalmente tramite
- *    FilterSidebar/filterStore: cambiare dataset ricolora la heatmap con una
- *    transizione, mostrando a colpo d'occhio cosa "sparisce" in FILAH/TROUT
- *    rispetto al quadro completo
- *  - tipo di entita' (persona / organizzazione / entrambe) - locale a questo widget
- *  - industria (multi-select, incluso "unclassified" per i topic senza industry) - locale
+ * "Aggrega per industria" spezza le righe in 2 gruppi affiancati SOLO se sono
+ * piu' di 7.
  *
- * Interazione collegata: cliccando il nome di una riga si aggiorna
- * filterStore.selectedPerson, cosi' altri widget (mappa, profilo persona, ecc.)
- * possono reagire osservando lo stesso store.
+ * DISEGNO: draw() e' AUTOCONTENUTA. I margini (top/destro/sinistro/gap centrale)
+ * sono variabili LOCALI a ogni chiamata, non ref condivisi tra chiamate diverse -
+ * ogni draw() riparte sempre dalla base e fa al massimo 2 passate (disegna,
+ * misura con getBoundingClientRect, corregge se serve, ridisegna una volta sola).
+ * Una guardia (isDrawing/redrawPending) impedisce che due draw() si sovrappongano:
+ * se ne arriva una nuova mentre una e' in corso, si accoda UNA sola richiesta,
+ * eseguita a fine della precedente. Questo elimina la classe di bug vista prima
+ * (piu' ref auto-osservanti che potevano misurare uno stato del DOM a meta'
+ * transizione e "congelare" una correzione sbagliata, con margini che crescevano
+ * senza mai stabilizzarsi).
+ *
+ * Righe: TUTTE le entita' il cui nodo esiste nel dataset attivo, anche quelle che
+ * non hanno mai espresso un'opinione (es. "Sean") - riga vuota, non invisibile.
+ *
+ * Interazione: click su una riga -> filterStore.selectedPerson. Hover su una
+ * colonna (solo vista "Per topic") -> filterStore.selectedTopic, collegato a
+ * TopicVoicesPanel.
  */
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
-import { getInitiativeParticipants, getInitiatives, getTopics } from '../utils/dataManager'
+import { getInitiativeParticipants, getInitiatives, getPersons, getOrganizations } from '../utils/dataManager'
 import { filterStore } from '../store/filterStore'
-import { buildPersonTopicSentiment, isKnownInDataset } from '../utils/personTopicSentiment'
+import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
 
 const loading = ref(true)
-const rows = ref([]) // vista deduplicata (entita, topic), da personTopicSentiment.js
+const rows = ref([])
+const persons = ref([])
+const organizations = ref([])
 
-const entityTypeFilter = ref('both')    // 'person' | 'organization' | 'both'
+const viewMode = ref('topic') // 'topic' | 'industry'
+const entityTypeFilter = ref('both')
 const ALL_INDUSTRIES = ['small vessel', 'large vessel', 'tourism', 'unclassified']
 const selectedIndustries = ref(new Set(ALL_INDUSTRIES))
 
 const containerRef = ref(null)
-// margine superiore e destro: partono da una base minima e si CORREGGONO DA SOLI
-// misurando quanto le etichette ruotate sporgono davvero
-const topPadding = ref(0)
-const rightPadding = ref(0)
 const BASE_TOP = 40
 const BASE_RIGHT = 10
+const BASE_LEFT = 20
+const SPLIT_THRESHOLD = 7
+const TOPIC_CELL_W = 30.5
+const INDUSTRY_CELL_W = 88
+const SPLIT_GAP_BASE = 40
+const ROW_H = 26 // un po' piu' grande di prima (26): rende "per topic" meno
+                        // stretta rispetto a "per industria" senza aggiungere
+                        // padding artificiale - lo spazio in piu' e' contenuto vero
+const TOPIC_ROW_H = 28.5  // idem, altezza riga leggermente maggiore in questa vista
+
 
 onMounted(async () => {
-  const [participants, initiatives] = await Promise.all([
-    getInitiativeParticipants(), getInitiatives(),
+  const [participants, initiatives, p, o] = await Promise.all([
+    getInitiativeParticipants(), getInitiatives(), getPersons(), getOrganizations(),
   ])
   rows.value = buildPersonTopicSentiment(participants, initiatives)
+  persons.value = p
+  organizations.value = o
   loading.value = false
   await nextTick()
   draw()
@@ -53,6 +72,23 @@ function industryOf(row) {
   return row.industry && row.industry.length ? row.industry : ['unclassified']
 }
 
+function nodePresent(entity, dataset) {
+  if (dataset === 'journalist') return true
+  return dataset === 'FILAH' ? entity.in_filah : entity.in_trout
+}
+
+const rowIds = computed(() => {
+  const dataset = filterStore.activeDataset
+  const ids = []
+  if (entityTypeFilter.value !== 'organization') {
+    for (const p of persons.value) if (nodePresent(p, dataset)) ids.push(p.id)
+  }
+  if (entityTypeFilter.value !== 'person') {
+    for (const o of organizations.value) if (nodePresent(o, dataset)) ids.push(o.id)
+  }
+  return ids.sort()
+})
+
 const filteredTopicIds = computed(() => {
   const ids = new Set()
   for (const row of rows.value) {
@@ -61,36 +97,61 @@ const filteredTopicIds = computed(() => {
   return ids
 })
 
-const filteredEntityIds = computed(() => {
-  const ids = new Set()
-  for (const row of rows.value) {
-    if (entityTypeFilter.value === 'person' && row.entity_type !== 'entity.person') continue
-    if (entityTypeFilter.value === 'organization' && row.entity_type !== 'entity.organization') continue
-    ids.add(row.entity_id)
-  }
-  return ids
-})
-
-const cells = computed(() => {
+const topicCells = computed(() => {
   const dataset = filterStore.activeDataset
+  const rowSet = new Set(rowIds.value)
   return rows.value
     .filter((row) => {
-      if (row.sentiment === null || row.sentiment === undefined) return false
-      if (!filteredEntityIds.value.has(row.entity_id)) return false
+      if (!rowSet.has(row.entity_id)) return false
       if (!filteredTopicIds.value.has(row.topic_id)) return false
       if (!isKnownInDataset(row, dataset)) return false
       return true
     })
     .map((row) => ({
       entityId: row.entity_id,
-      topicId: row.topic_id,
+      colId: row.topic_id,
       sentiment: row.sentiment,
       reason: row.reason,
+      isNull: row.sentiment === null || row.sentiment === undefined,
     }))
 })
+const topicColIds = computed(() => Array.from(new Set(topicCells.value.map((c) => c.colId))).sort())
 
-const rowIds = computed(() => Array.from(new Set(cells.value.map((c) => c.entityId))).sort())
-const colIds = computed(() => Array.from(new Set(cells.value.map((c) => c.topicId))).sort())
+const INDUSTRY_COLS = ['small vessel', 'large vessel', 'tourism']
+const industryCells = computed(() => {
+  const dataset = filterStore.activeDataset
+  const rowSet = new Set(rowIds.value)
+  const groups = new Map()
+  const nullGroups = new Map()
+  for (const row of rows.value) {
+    if (!rowSet.has(row.entity_id)) continue
+    if (!isKnownInDataset(row, dataset)) continue
+    for (const ind of industryOf(row)) {
+      if (!INDUSTRY_COLS.includes(ind)) continue
+      const key = `${row.entity_id}|${ind}`
+      if (row.sentiment === null || row.sentiment === undefined) {
+        if (!nullGroups.has(key)) nullGroups.set(key, 0)
+        nullGroups.set(key, nullGroups.get(key) + 1)
+      } else {
+        if (!groups.has(key)) groups.set(key, [])
+        groups.get(key).push(row.sentiment)
+      }
+    }
+  }
+  const out = Array.from(groups.entries()).map(([key, values]) => {
+    const [entityId, colId] = key.split('|')
+    return { entityId, colId, sentiment: d3.mean(values), reason: `media su ${values.length} topic`, isNull: false }
+  })
+  for (const [key, count] of nullGroups.entries()) {
+    if (groups.has(key)) continue
+    const [entityId, colId] = key.split('|')
+    out.push({ entityId, colId, sentiment: null, reason: `${count} topic con dato mancante`, isNull: true })
+  }
+  return out
+})
+
+const cells = computed(() => (viewMode.value === 'topic' ? topicCells.value : industryCells.value))
+const colIds = computed(() => (viewMode.value === 'topic' ? topicColIds.value : INDUSTRY_COLS))
 
 function toggleIndustry(ind) {
   const s = new Set(selectedIndustries.value)
@@ -99,173 +160,261 @@ function toggleIndustry(ind) {
 }
 
 function selectEntity(id) {
-  filterStore.selectedPerson = id
+  filterStore.selectedPerson = filterStore.selectedPerson === id ? null : id
 }
-const margin = computed(() => ({
-  top: BASE_TOP + topPadding.value,
-  right: BASE_RIGHT + rightPadding.value,
-  bottom: 10,
-  left: 160,
-}))
-const cellSize = 26
+
+let isDrawing = false
+let redrawPending = false
 
 function draw() {
+  if (isDrawing) { redrawPending = true; return }
+  isDrawing = true
+  runDraw().finally(() => {
+    isDrawing = false
+    if (redrawPending) {
+      redrawPending = false
+      draw()
+    }
+  })
+}
 
+async function runDraw() {
   if (!containerRef.value) return
   const rowsD = rowIds.value
   const cols = colIds.value
-  const m = margin.value
-
-  const width = m.left + cols.length * cellSize + m.right
-  const height = m.top + rowsD.length * cellSize + m.bottom
-
-  const svg = d3.select(containerRef.value)
-    .attr('width', width)
-    .attr('height', height)
-    .style('overflow', 'visible')
-
-  const x = d3.scaleBand().domain(cols).range([m.left, m.left + cols.length * cellSize]).padding(0.06)
-  const y = d3.scaleBand().domain(rowsD).range([m.top, m.top + rowsD.length * cellSize]).padding(0.06)
-  const color = d3.scaleSequential(d3.interpolateRdYlGn).domain([-1, 1])
+  const svg = d3.select(containerRef.value).style('overflow', 'visible')
 
   let tooltip = d3.select('body').select('.tsh-tooltip')
   if (tooltip.empty()) {
     tooltip = d3.select('body').append('div')
       .attr('class', 'tsh-tooltip')
-      .style('position', 'fixed')
-      .style('pointer-events', 'none')
-      .style('background', '#0f172a')
-      .style('color', 'white')
-      .style('padding', '6px 10px')
-      .style('border-radius', '6px')
-      .style('font-size', '12px')
-      .style('max-width', '260px')
-      .style('opacity', 0)
-      .style('z-index', 50)
+      .style('position', 'fixed').style('pointer-events', 'none')
+      .style('background', '#0f172a').style('color', 'white')
+      .style('padding', '6px 10px').style('border-radius', '6px')
+      .style('font-size', '12px').style('max-width', '260px')
+      .style('opacity', 0).style('z-index', 50)
   }
 
-const colLabels = svg.selectAll('text.col-label').data(cols, (d) => d)
-colLabels.exit().remove()
-colLabels.enter().append('text')
-  .attr('class', 'col-label')
-  .attr('text-anchor', 'start')
-  .style('font-size', '11px')
-  .style('cursor', 'pointer')
-  .on('mouseenter click', (event, d) => { filterStore.selectedTopic = d })
-  .merge(colLabels)
-  .attr('transform', (d) => `translate(${x(d) + x.bandwidth() / 2},${m.top - 8}) rotate(-55)`)
-  .style('fill', (d) => (filterStore.selectedTopic === d ? '#2563eb' : '#334155'))
-  .style('font-weight', (d) => (filterStore.selectedTopic === d ? 700 : 400))
-  .text((d) => d)
+  let topPad = BASE_TOP
+  let rightPad = BASE_RIGHT
+  let leftPad = BASE_LEFT
+  let gapPad = SPLIT_GAP_BASE
 
-  const rowLabels = svg.selectAll('text.row-label').data(rowsD, (d) => d)
-  rowLabels.exit().remove()
-  rowLabels.enter().append('text')
-    .attr('class', 'row-label')
-    .attr('text-anchor', 'end')
-    .style('font-size', '12px')
-    .style('cursor', 'pointer')
-    .on('click', (event, d) => selectEntity(d))
-    .merge(rowLabels)
-    .attr('x', m.left - 8)
-    .attr('y', (d) => y(d) + y.bandwidth() / 2)
-    .attr('dy', '0.32em')
-    .style('fill', (d) => (filterStore.selectedPerson === d ? '#2563eb' : '#334155'))
-    .style('font-weight', (d) => (filterStore.selectedPerson === d ? 700 : 400))
-    .text((d) => d)
+  function drawBlock(m, blockRows, xRange, rowLabelX, colFontSize, colRotate, rowH = ROW_H, rowFontSize = '12px') {
+    const x = d3.scaleBand().domain(cols).range(xRange).padding(0.1)
+    const y = d3.scaleBand().domain(blockRows).range([m.top, m.top + blockRows.length * rowH]).padding(0.08)
+    const color = d3.scaleSequential(d3.interpolateRdYlGn).domain([-1, 1])
 
-  const key = (d) => `${d.entityId}|${d.topicId}`
-  svg.selectAll('rect.cell')
-    .data(cells.value, key)
-    .join(
-      (enter) => enter.append('rect')
-        .attr('class', 'cell')
-        .attr('x', (d) => x(d.topicId))
-        .attr('y', (d) => y(d.entityId))
-        .attr('width', x.bandwidth())
-        .attr('height', y.bandwidth())
-        .attr('rx', 3)
-        .style('fill', (d) => color(d.sentiment))
-        .style('opacity', 0)
-        .style('cursor', 'pointer')
-        .call((enter) => enter.transition().duration(300).style('opacity', 1)),
-      (update) => update
-        .call((update) => update.transition().duration(300)
-          .attr('x', (d) => x(d.topicId))
-          .attr('y', (d) => y(d.entityId))
-          .style('fill', (d) => color(d.sentiment))
-          .style('opacity', 1)),
-      (exit) => exit.call((exit) => exit.transition().duration(200).style('opacity', 0).remove()),
-    )
-    .on('mouseenter', (event, d) => {
-      tooltip.style('opacity', 1).html(
-        `<b>${d.entityId}</b><br/>topic: ${d.topicId}<br/>sentiment: ${d.sentiment}` +
-        (d.reason ? `<br/><i>${d.reason}</i>` : ''),
-      )
-    })
-    .on('mousemove', (event) => {
-      tooltip.style('left', `${event.clientX + 12}px`).style('top', `${event.clientY + 12}px`)
-    })
-    .on('mouseleave', () => tooltip.style('opacity', 0))
-    .on('click', (event, d) => selectEntity(d.entityId))
+    svg.selectAll(null).data(cols).enter().append('text')
+      .attr('class', 'col-label')
+      .attr('text-anchor', colRotate ? 'start' : 'middle')
+      .style('font-size', colFontSize).style('cursor', colRotate ? 'pointer' : 'default')
+      .on('mouseenter click', (event, d) => { if (colRotate) filterStore.selectedTopic = d })
+      .attr('transform', (d) => (colRotate
+        ? `translate(${x(d) + x.bandwidth() / 2},${m.top - 8}) rotate(-55)`
+        : `translate(${x(d) + x.bandwidth() / 2},${m.top - 12})`))
+      .style('fill', (d) => (colRotate && filterStore.selectedTopic === d ? '#2563eb' : '#334155'))
+      .style('font-weight', (d) => (colRotate && filterStore.selectedTopic === d ? 700 : 400))
+      .text((d) => readableLabel(d))
 
-      // misura reale: quanto sporgono le etichette ruotate oltre il bordo alto dell'SVG?
-  nextTick(() => {
+    svg.selectAll(null).data(blockRows).enter().append('text')
+      .attr('class', 'row-label')
+      .attr('text-anchor', 'end')
+      .attr('x', rowLabelX)
+      .attr('y', (d) => y(d) + y.bandwidth() / 2)
+      .attr('dy', '0.32em')
+      .style('font-size', rowFontSize).style('cursor', 'pointer')
+      .style('fill', (d) => (filterStore.selectedPerson === d ? '#2563eb' : '#334155'))
+      .style('font-weight', (d) => (filterStore.selectedPerson === d ? 700 : 400))
+      .on('click', (event, d) => selectEntity(d))
+      .text((d) => readableLabel(d))
+
+    const blockCells = cells.value.filter((c) => blockRows.includes(c.entityId))
+    svg.selectAll(null).data(blockCells).enter().append('rect')
+      .attr('class', 'cell')
+      .attr('x', (d) => x(d.colId))
+      .attr('y', (d) => y(d.entityId))
+      .attr('width', x.bandwidth())
+      .attr('height', y.bandwidth())
+      .attr('rx', 3)
+      .style('fill', (d) => (d.isNull ? '#e2e8f0' : color(d.sentiment)))
+      .style('cursor', 'pointer')
+      .on('mouseenter', (event, d) => {
+        const sentimentText = d.isNull ? 'non disponibile (partecipazione nota, dato mancante)' : d.sentiment.toFixed(2)
+        tooltip.style('opacity', 1).html(
+          `<b>${d.entityId}</b><br/>${readableLabel(d.colId)}<br/>sentiment: ${sentimentText}` +
+          (d.reason ? `<br/><i>${d.reason}</i>` : ''),
+        )
+      })
+      .on('mousemove', (event) => tooltip.style('left', `${event.clientX + 12}px`).style('top', `${event.clientY + 12}px`))
+      .on('mouseleave', () => tooltip.style('opacity', 0))
+      .on('click', (event, d) => selectEntity(d.entityId))
+  }
+
+  function render() {
+    svg.selectAll('*').remove()
+    const m = { top: topPad, right: rightPad, bottom: 10, left: leftPad }
+
+    if (viewMode.value === 'industry' && rowsD.length > SPLIT_THRESHOLD) {
+      const half = Math.ceil(rowsD.length / 2)
+      const groupA = rowsD.slice(0, half)
+      const groupB = rowsD.slice(half)
+      const gridW = cols.length * INDUSTRY_CELL_W
+      const groupBOffset = m.left + gridW + gapPad
+
+      const width = groupBOffset + gridW + m.right
+      const height = m.top + half * ROW_H + m.bottom
+      svg.attr('width', width).attr('height', height)
+
+      drawBlock(m, groupA, [m.left, m.left + gridW], m.left - 10, '10px', false)
+      drawBlock(m, groupB, [groupBOffset, groupBOffset + gridW], groupBOffset - 10, '10px', false)
+
+      return { mode: 'split', m, gridW, groupA, groupB }
+    }
+    if (viewMode.value === 'industry') {
+      const gridW = cols.length * INDUSTRY_CELL_W
+      const width = m.left + gridW + m.right
+      const height = m.top + rowsD.length * ROW_H + m.bottom
+      svg.attr('width', width).attr('height', height)
+
+      drawBlock(m, rowsD, [m.left, m.left + gridW], m.left - 10, '10px', false)
+      return { mode: 'single-industry', m, primaryRows: rowsD }
+    }
+    const totalTopics = new Set(rows.value.map((r) => r.topic_id)).size || cols.length
+    const scale = Math.min(3, Math.max(1, totalTopics / Math.max(1, cols.length)))
+    const cellW = TOPIC_CELL_W * scale
+
+    const width = m.left + cols.length * cellW + m.right
+    const height = m.top + rowsD.length * TOPIC_ROW_H + m.bottom
+    svg.attr('width', width).attr('height', height)
+
+    drawBlock(m, rowsD, [m.left, m.left + cols.length * cellW], m.left - 10, '12px', true, TOPIC_ROW_H, '13px')
+    return { mode: 'topic', m, primaryRows: rowsD }
+  }
+
+  function measureAndCorrect(state) {
     const svgEl = containerRef.value
-    if (!svgEl) return
+    if (!svgEl) return false
     const svgRect = svgEl.getBoundingClientRect()
-    let minTop = svgRect.top
-    let maxRight = svgRect.right
-    svg.selectAll('text.col-label').each(function () {
-      const r = this.getBoundingClientRect()
-      if (r.top < minTop) minTop = r.top
-      if (r.right > maxRight) maxRight = r.right
-    })
-    const topOverflow = svgRect.top - minTop
-    const rightOverflow = maxRight - svgRect.right
-    if (topOverflow > 2) topPadding.value = topPadding.value + Math.ceil(topOverflow) + 6
-    if (rightOverflow > 2) rightPadding.value = rightPadding.value + Math.ceil(rightOverflow) + 6
-  })
+    let changed = false
 
+    const primaryRows = state.mode === 'split' ? state.groupA : state.primaryRows
+    let minLeft = Infinity
+    svg.selectAll('text.row-label').each(function (d) {
+      if (!primaryRows.includes(d)) return
+      const r = this.getBoundingClientRect()
+      if (r.left < minLeft) minLeft = r.left
+    })
+    if (minLeft !== Infinity) {
+      const overshoot = svgRect.left - minLeft
+      const slack = minLeft - svgRect.left
+      if (overshoot > 2) {
+        leftPad = leftPad + Math.ceil(overshoot) + 10
+        changed = true
+      } else if (slack > 15) {
+        const next = Math.max(BASE_LEFT, leftPad - Math.floor(slack) + 10)
+        if (next !== leftPad) { leftPad = next; changed = true }
+      }
+    }
+
+    if (state.mode === 'split') {
+      const groupAGridRightPx = svgRect.left + (state.m.left + state.gridW)
+      let minLeftOfGroupB = Infinity
+      svg.selectAll('text.row-label').each(function (d) {
+        if (!state.groupB.includes(d)) return
+        const r = this.getBoundingClientRect()
+        if (r.left < minLeftOfGroupB) minLeftOfGroupB = r.left
+      })
+      if (minLeftOfGroupB !== Infinity) {
+        const overlap = groupAGridRightPx - minLeftOfGroupB + 12
+        const slack = -overlap
+        if (overlap > 2) {
+          gapPad = gapPad + Math.ceil(overlap)
+          changed = true
+        } else if (slack > 15) {
+          const next = Math.max(SPLIT_GAP_BASE, gapPad - Math.floor(slack) + 10)
+          if (next !== gapPad) { gapPad = next; changed = true }
+        }
+      }
+    }
+
+    if (state.mode === 'topic') {
+      let minTop = svgRect.top
+      let maxRight = svgRect.right
+      svg.selectAll('text.col-label').each(function () {
+        const r = this.getBoundingClientRect()
+        if (r.top < minTop) minTop = r.top
+        if (r.right > maxRight) maxRight = r.right
+      })
+      const topOverflow = svgRect.top - minTop
+      if (topOverflow > 2) { topPad = topPad + Math.ceil(topOverflow) + 6; changed = true }
+
+      const rightOverflow = maxRight - svgRect.right
+      if (rightOverflow > 2) { rightPad = rightPad + Math.ceil(rightOverflow) + 6; changed = true }
+    }
+
+    return changed
+  }
+
+  for (let pass = 0; pass < 2; pass++) {
+    const state = render()
+    await nextTick()
+    const corrected = measureAndCorrect(state)
+    if (!corrected) break
+  }
 }
 
-watch([cells, rowIds, colIds, () => filterStore.activeDataset], () => draw())
+watch([viewMode, entityTypeFilter, selectedIndustries, () => filterStore.activeDataset], () => draw())
 watch(() => filterStore.selectedPerson, () => draw())
 watch(() => filterStore.selectedTopic, () => draw())
-watch(topPadding, () => draw())
-watch(rightPadding, () => draw())
 </script>
 
 <template>
-  <div class="p-4">
-    <h2 class="text-lg font-semibold mb-3">Sentiment per persona/organizzazione e topic</h2>
-
-    <div class="flex flex-wrap items-center gap-4 mb-4 text-sm">
-      <div class="flex items-center gap-1">
-        <span class="text-slate-500 mr-1">Mostra:</span>
+  <div
+  class="border border-slate-200 rounded-lg py-4"
+  :class="viewMode === 'topic' ? 'px-10' : 'px-4'"
+>
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+      <h2 class="text-lg font-semibold">Sentiment per persona/organizzazione</h2>
+      <div class="inline-flex rounded-lg border border-slate-300 overflow-hidden text-sm shrink-0">
         <button
-          v-for="opt in [['both','Entrambi'],['person','Persone'],['organization','Organizzazioni']]" :key="opt[0]"
-          class="px-2.5 py-1 rounded-md border"
-          :class="entityTypeFilter === opt[0] ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-300 hover:bg-slate-50'"
-          @click="entityTypeFilter = opt[0]"
+          v-for="opt in [['topic','Per topic'],['industry','Per industria']]" :key="opt[0]"
+          class="px-3 py-1"
+          :class="viewMode === opt[0] ? 'bg-indigo-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50'"
+          @click="viewMode = opt[0]"
         >{{ opt[1] }}</button>
-      </div>
-
-      <div class="flex items-center gap-1 flex-wrap">
-        <span class="text-slate-500 mr-1">Industria:</span>
-        <button
-          v-for="ind in ALL_INDUSTRIES" :key="ind"
-          class="px-2.5 py-1 rounded-full border text-xs"
-          :class="selectedIndustries.has(ind) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
-          @click="toggleIndustry(ind)"
-        >{{ ind }}</button>
       </div>
     </div>
 
     <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
-   
-    <div v-else class="inline-block max-w-full overflow-auto border border-slate-200 rounded-lg">
+    <div v-else class="inline-block max-w-full overflow-auto">
       <svg ref="containerRef"></svg>
+    </div>
+
+    <div class="flex flex-col gap-3 mt-5 pt-4 border-t border-slate-100">
+      <div class="flex items-center gap-3 text-sm">
+        <span class="text-slate-500 w-24 shrink-0">Mostra</span>
+        <div class="flex gap-1">
+          <button
+            v-for="opt in [['both','Entrambi'],['person','Persone'],['organization','Organizzazioni']]" :key="opt[0]"
+            class="px-2.5 py-1 rounded-md border"
+            :class="entityTypeFilter === opt[0] ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-300 hover:bg-slate-50'"
+            @click="entityTypeFilter = opt[0]"
+          >{{ opt[1] }}</button>
+        </div>
+      </div>
+
+      <div v-if="viewMode === 'topic'" class="flex items-center gap-3 text-sm">
+        <span class="text-slate-500 w-24 shrink-0">Filtra topic</span>
+        <div class="flex items-center gap-1 flex-wrap">
+          <button
+            v-for="ind in ALL_INDUSTRIES" :key="ind"
+            class="px-2.5 py-1 rounded-full border text-xs"
+            :class="selectedIndustries.has(ind) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
+            @click="toggleIndustry(ind)"
+          >{{ ind }}</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

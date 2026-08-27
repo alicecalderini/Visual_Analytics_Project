@@ -33,3 +33,8 @@ export function isKnownInDataset(row, dataset) {
   if (dataset === 'TROUT') return row.in_trout
   return false
 }
+
+export function readableLabel(str) {
+  if (!str) return str
+  return str.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}

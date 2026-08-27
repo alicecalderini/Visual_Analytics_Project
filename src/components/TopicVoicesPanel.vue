@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { filterStore } from '../store/filterStore'
 import { getInitiativeParticipants, getInitiatives, getTopics } from '../utils/dataManager'
-import { buildPersonTopicSentiment, isKnownInDataset } from '../utils/personTopicSentiment'
+import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
 
 const rows = ref([])
 const topicLabel = ref(new Map())
@@ -34,9 +34,9 @@ function sentimentColor(s) {
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4 w-80 shrink-0">
-    <h2 class="font-semibold mb-1">Chi lo dice</h2>
-    <p class="text-xs text-slate-400 mb-3">
+  <div class="border border-slate-200 rounded-lg p-4 w-[420px] shrink-0">
+    <h2 class="font-semibold text-lg mb-1">Chi lo dice</h2>
+    <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
     </p>
 
@@ -45,14 +45,14 @@ function sentimentColor(s) {
       Passa il mouse su una barra a sinistra per vedere le singole opinioni.
     </div>
     <div v-else>
-      <div class="font-medium text-sm mb-2">
-        {{ topicLabel.get(filterStore.selectedTopic) || filterStore.selectedTopic }}
+      <div class="font-medium text-base mb-2">
+        {{ readableLabel(topicLabel.get(filterStore.selectedTopic) || filterStore.selectedTopic) }}
       </div>
       <div v-if="!voices.length" class="text-slate-400 text-sm">
         Nessuna opinione nota a questo dataset.
       </div>
-      <ul v-else class="flex flex-col gap-2 max-h-80 overflow-y-auto pr-1">
-        <li v-for="v in voices" :key="v.entity_id" class="text-sm border-b border-slate-100 pb-2">
+      <ul v-else class="flex flex-col gap-3 max-h-96 overflow-y-auto pr-1">
+        <li v-for="v in voices" :key="v.entity_id" class="text-base border-b border-slate-100 pb-3">
           <div class="flex justify-between items-baseline">
             <button
               class="font-medium hover:underline"
@@ -60,7 +60,7 @@ function sentimentColor(s) {
             >{{ v.entity_id }}</button>
             <span :class="sentimentColor(v.sentiment)" class="font-semibold">{{ v.sentiment }}</span>
           </div>
-          <p v-if="v.reason" class="text-slate-500 text-xs mt-0.5 break-words">{{ v.reason }}</p>
+          <p v-if="v.reason" class="text-slate-500 text-sm mt-1 break-words">{{ v.reason }}</p>
         </li>
       </ul>
     </div>

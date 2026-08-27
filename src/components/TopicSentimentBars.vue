@@ -3,7 +3,7 @@ import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
 import { filterStore } from '../store/filterStore'
 import { getInitiativeParticipants, getInitiatives, getTopics } from '../utils/dataManager'
-import { buildPersonTopicSentiment, isKnownInDataset } from '../utils/personTopicSentiment'
+import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
 
 const rows = ref([])
 const topicLabel = ref(new Map())
@@ -37,7 +37,7 @@ const topicAverages = computed(() => {
     const personRow = person ? items.find((d) => d.entity_id === person) : null
     out.push({
       topicId,
-      label: topicLabel.value.get(topicId) || topicId,
+      label: readableLabel(topicLabel.value.get(topicId) || topicId),
       avg,
       n: items.length,
       personSentiment: personRow ? personRow.sentiment : null,
@@ -54,9 +54,9 @@ function draw() {
   const data = topicAverages.value
   if (!data.length) return
 
-  const width = 460
-  const rowHeight = 22
-  const margin = { top: 6, right: 40, bottom: 24, left: 150 }
+  const width = 560
+  const rowHeight = 28
+  const margin = { top: 10, right: 46, bottom: 30, left: 180 }
   const height = margin.top + margin.bottom + data.length * rowHeight
   svg.attr('width', width).attr('height', height)
 
@@ -70,7 +70,7 @@ function draw() {
   svg.append('g')
     .attr('transform', `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x).ticks(5))
-    .call((g) => g.selectAll('text').attr('font-size', 10).attr('fill', '#94a3b8'))
+    .call((g) => g.selectAll('text').attr('font-size', 12).attr('fill', '#94a3b8'))
     .call((g) => g.select('.domain').attr('stroke', '#e2e8f0'))
 
   svg.append('line')
@@ -87,11 +87,11 @@ function draw() {
     .on('mouseenter click', (_, d) => { filterStore.selectedTopic = d.topicId })
 
   row.append('text')
-    .attr('x', margin.left - 8)
+    .attr('x', margin.left - 10)
     .attr('y', y.bandwidth() / 2)
     .attr('dy', '0.32em')
     .attr('text-anchor', 'end')
-    .attr('font-size', 11)
+    .attr('font-size', 13)
     .attr('font-weight', (d) => (d.topicId === filterStore.selectedTopic ? 700 : 400))
     .attr('fill', (d) => (d.topicId === filterStore.selectedTopic ? '#0f172a' : '#475569'))
     .text((d) => d.label)
@@ -109,7 +109,7 @@ function draw() {
     .append('circle')
     .attr('cx', (d) => x(d.personSentiment))
     .attr('cy', y.bandwidth() / 2)
-    .attr('r', 4)
+    .attr('r', 5)
     .attr('fill', '#fff')
     .attr('stroke', '#0f172a')
     .attr('stroke-width', 2)
@@ -120,8 +120,8 @@ watch([topicAverages, () => filterStore.selectedTopic], () => nextTick(draw))
 
 <template>
   <div class="border border-slate-200 rounded-lg p-4">
-    <h2 class="font-semibold mb-1">Sentiment medio per topic</h2>
-    <p class="text-xs text-slate-400 mb-3">
+    <h2 class="font-semibold text-lg mb-1">Sentiment medio per topic</h2>
+    <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
       <span v-if="filterStore.selectedPerson"> — cerchio bianco = posizione di <b>{{ filterStore.selectedPerson }}</b></span>
     </p>
