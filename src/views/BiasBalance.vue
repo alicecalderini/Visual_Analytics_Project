@@ -1,21 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { getInitiativeParticipants } from '../utils/dataManager'
-
-const nParticipations = ref(null)
-
-onMounted(async () => {
-  const rows = await getInitiativeParticipants()
-  nParticipations.value = rows.length
-})
+import FilterSidebar from '../components/FilterSidebar.vue'
+import IndustryBalance from '../components/IndustryBalance.vue'
+import InitiativesByIndustry from '../components/InitiativesByIndustry.vue'
 </script>
 
 <template>
-  <div class="p-8">
-    <h1 class="text-2xl font-bold mb-2">La bilancia: fishing vs tourism</h1>
-    <p class="text-slate-600">Hello world 👋</p>
-    <p class="text-sm text-slate-400 mt-2">
-      (test caricamento dati) partecipazioni trovate in initiative_participants.json: {{ nParticipations }}
-    </p>
+  <div class="flex h-full">
+    <FilterSidebar />
+
+    <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+      <IndustryBalance />
+      <InitiativesByIndustry />
+    </div>
   </div>
 </template>
