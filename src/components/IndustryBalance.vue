@@ -1,42 +1,57 @@
 <script setup>
 /**
- * Il cuore della pagina: confronta il sentiment aggregato tra due gruppi di
- * industrie a scelta (Tourism vs Fishing, Tourism vs Small vessel, ecc. - o
- * qualunque combinazione l'utente componga).
+ * Confronta il sentiment aggregato tra due gruppi di industrie a scelta.
  *
- * A differenza della "bilancia" di BAIT: qui ogni persona/organizzazione
- * compare SOLO nel lato dove ha davvero espresso un'opinione su
- * quell'industria - non "chi e' contro A finisce visualizzato su B". Il
- * numero e' la SOMMA dei sentiment (stesso calcolo gia' usato nel report:
- * fishing vs tourism), la vista sono due liste a barre orizzontali affiancate,
- * stesso linguaggio visivo di "Sentiment medio per topic" nella pagina Membri.
+ * Ogni persona/organizzazione compare SOLO nel lato dove ha davvero espresso
+ * un'opinione su quell'industria - non "chi e' contro A finisce visualizzato
+ * su B" (a differenza della bilancia di BAIT). Il numero e' la SOMMA dei
+ * sentiment (stesso calcolo del report), la vista sono due liste a barre
+ * orizzontali affiancate.
+ *
+ * Selezione delle categorie in un gruppo: cliccarne una SOSTITUISCE quella
+ * gia' scelta (tourism dopo unclassified cambia, non somma) - l'UNICA
+ * eccezione e' small vessel + large vessel, che possono coesistere (sono
+ * entrambe "fishing" nella sostanza) e quindi SI sommano tra loro. "Aggrega
+ * fishing" (nella sidebar, vale per tutta la pagina) le unisce direttamente
+ * in un'unica categoria "fishing".
  *
  * Click su una barra -> pannello a destra con TUTTI i sentiment che
- * compongono quel totale per quella persona (topic, valore, motivazione) -
- * lo stesso tipo di dettaglio che in BAIT appariva cliccando una bolla.
+ * compongono quel totale per quella persona (topic, valore, motivazione).
  */
-import { ref, computed, onMounted } from 'vue'
-import * as d3 from 'd3'
+import { ref, computed, onMounted, watch } from 'vue'
 import { filterStore } from '../store/filterStore'
 import { getInitiativeParticipants, getInitiatives, getPersons, getOrganizations } from '../utils/dataManager'
 import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
 
-const ALL_CATEGORIES = ['tourism', 'small vessel', 'large vessel', 'unclassified']
-const PRESETS = [
-  { label: 'Tourism vs Fishing', a: ['tourism'], b: ['small vessel', 'large vessel'] },
-  { label: 'Tourism vs Small vessel', a: ['tourism'], b: ['small vessel'] },
-  { label: 'Tourism vs Large vessel', a: ['tourism'], b: ['large vessel'] },
-  { label: 'Small vs Large vessel', a: ['small vessel'], b: ['large vessel'] },
-]
+const props = defineProps({ aggregateFishing: { type: Boolean, default: false } })
 
 const rows = ref([])
 const entityMeta = ref(new Map()) // id -> { name, type }
 const loading = ref(true)
 
-const groupA = ref(new Set(PRESETS[0].a))
-const groupB = ref(new Set(PRESETS[0].b))
+// righe fisse per il layout a griglia dei pulsanti categoria (si allineano
+// visivamente a "cosa si puo' sommare"). Con l'aggregazione attiva restano
+// solo 3 categorie indipendenti (nessuna si somma piu' a un'altra) - entrano
+// comode su una riga sola, non serve andare a capo.
+const categoryRows = computed(() => (
+  props.aggregateFishing ? [['tourism', 'unclassified', 'fishing']] : [['tourism', 'unclassified'], ['small vessel', 'large vessel']]
+))
+
+const groupA = ref(new Set(['tourism']))
+const groupB = ref(new Set(['small vessel', 'large vessel']))
 const entityTypeFilter = ref('both')
 const selected = ref(null) // { entityId, group: 'A' | 'B' }
+
+// il toggle "Aggrega fishing" ora vive nella sidebar (v-model dal genitore) -
+// quando cambia, la selezione corrente ("Small Vessel + Large Vessel") non ha
+// piu' senso letterale (le categorie diventano ['tourism','fishing','unclassified']),
+// quindi la rimappiamo su un default coerente invece di lasciarla "orfana"
+// (bottoni senza nulla selezionato ma totale ancora popolato con l'etichetta vecchia)
+watch(() => props.aggregateFishing, (agg) => {
+  groupA.value = new Set(['tourism'])
+  groupB.value = new Set(agg ? ['fishing'] : ['small vessel', 'large vessel'])
+  selected.value = null
+})
 
 onMounted(async () => {
   const [participants, initiatives, persons, orgs] = await Promise.all([
@@ -51,27 +66,36 @@ onMounted(async () => {
 })
 
 function industryOf(row) {
-  return row.industry && row.industry.length ? row.industry : ['unclassified']
+  const raw = row.industry && row.industry.length ? row.industry : ['unclassified']
+  if (!props.aggregateFishing) return raw
+  return raw.map((i) => (i === 'small vessel' || i === 'large vessel' ? 'fishing' : i))
 }
 
-function applyPreset(p) {
-  groupA.value = new Set(p.a)
-  groupB.value = new Set(p.b)
-  selected.value = null
+// "cluster" di una categoria: small vessel e large vessel condividono lo
+// stesso cluster ("fishing"), tutte le altre sono cluster a se stanti -
+// selezionare una categoria dello STESSO cluster di quella gia' scelta la
+// aggiunge (si sommano), una di un cluster DIVERSO sostituisce la selezione
+function clusterOf(cat) {
+  return (cat === 'small vessel' || cat === 'large vessel') ? 'fishing' : cat
 }
 
 function toggleCategory(group, cat) {
-  const setA = new Set(groupA.value)
-  const setB = new Set(groupB.value)
-  if (group === 'A') {
-    setB.delete(cat)
-    if (setA.has(cat)) setA.delete(cat); else setA.add(cat)
+  const current = group === 'A' ? groupA.value : groupB.value
+  const otherSet = group === 'A' ? groupB.value : groupA.value
+  const newOther = new Set(otherSet)
+  newOther.delete(cat) // una categoria non puo' stare in entrambi i gruppi
+
+  let newCurrent
+  if (current.has(cat)) {
+    newCurrent = new Set(current)
+    newCurrent.delete(cat)
   } else {
-    setA.delete(cat)
-    if (setB.has(cat)) setB.delete(cat); else setB.add(cat)
+    const currentCluster = current.size ? clusterOf([...current][0]) : null
+    newCurrent = currentCluster === clusterOf(cat) ? new Set([...current, cat]) : new Set([cat])
   }
-  groupA.value = setA
-  groupB.value = setB
+
+  if (group === 'A') { groupA.value = newCurrent; groupB.value = newOther }
+  else { groupB.value = newCurrent; groupA.value = newOther }
   selected.value = null
 }
 
@@ -140,44 +164,50 @@ function barWidth(total, maxAbs) {
   <div class="border border-slate-200 rounded-lg p-4">
     <h2 class="text-lg font-semibold mb-4">Bias tra industrie</h2>
 
-    <div class="flex flex-wrap gap-2 mb-3">
-      <button
-        v-for="p in PRESETS" :key="p.label"
-        class="px-2.5 py-1 rounded-md border text-sm bg-white border-slate-300 hover:bg-slate-50"
-        @click="applyPreset(p)"
-      >{{ p.label }}</button>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-      <div class="flex items-center gap-2 flex-wrap text-sm">
-        <span class="text-slate-500 w-16 shrink-0">Gruppo A</span>
-        <button
-          v-for="c in ALL_CATEGORIES" :key="'a' + c"
-          class="px-2.5 py-1 rounded-full border text-xs capitalize"
-          :class="groupA.has(c) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
-          @click="toggleCategory('A', c)"
-        >{{ c }}</button>
-      </div>
-      <div class="flex items-center gap-2 flex-wrap text-sm">
-        <span class="text-slate-500 w-16 shrink-0">Gruppo B</span>
-        <button
-          v-for="c in ALL_CATEGORIES" :key="'b' + c"
-          class="px-2.5 py-1 rounded-full border text-xs capitalize"
-          :class="groupB.has(c) ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
-          @click="toggleCategory('B', c)"
-        >{{ c }}</button>
-      </div>
-    </div>
-
-    <div class="flex items-center gap-3 mb-4 text-sm">
+    <!-- "Mostra": stile deliberatamente diverso dai filtri della sidebar (grigio
+         chiaro, non nero pieno) per non sembrare un filtro di pagina come Dataset -->
+    <div class="flex items-center gap-3 mb-5 text-sm">
       <span class="text-slate-500">Mostra</span>
       <button
         v-for="opt in [['both','Entrambi'],['person','Persone'],['organization','Organizzazioni']]" :key="opt[0]"
         class="px-2.5 py-1 rounded-md border"
-        :class="entityTypeFilter === opt[0] ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-300 hover:bg-slate-50'"
+        :class="entityTypeFilter === opt[0]
+          ? 'bg-slate-200 text-slate-900 border-slate-300 font-medium'
+          : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'"
         @click="entityTypeFilter = opt[0]"
       >{{ opt[1] }}</button>
-      <span class="text-slate-400 ml-auto">Dataset: <b class="text-slate-600">{{ filterStore.activeDataset }}</b></span>
+    </div>
+
+    <!-- Gruppo A / Gruppo B: stessa griglia [1fr_1fr_320px] delle barre sotto,
+         cosi' ciascun gruppo si allinea esattamente sopra il proprio barplot
+         (la terza colonna, quella del pannello dettaglio, resta vuota qui) -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_320px] gap-6 mb-5">
+      <div class="flex items-start gap-2 text-sm">
+        <span class="text-slate-500 w-16 shrink-0 pt-1.5">Gruppo A</span>
+        <div class="flex flex-col gap-1.5">
+          <div v-for="(row, ri) in categoryRows" :key="ri" class="flex flex-wrap gap-1.5">
+            <button
+              v-for="c in row" :key="'a' + c"
+              class="px-2.5 py-1 rounded-full border text-xs capitalize"
+              :class="groupA.has(c) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
+              @click="toggleCategory('A', c)"
+            >{{ c }}</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-start gap-2 text-sm">
+        <span class="text-slate-500 w-16 shrink-0 pt-1.5">Gruppo B</span>
+        <div class="flex flex-col gap-1.5">
+          <div v-for="(row, ri) in categoryRows" :key="ri" class="flex flex-wrap gap-1.5">
+            <button
+              v-for="c in row" :key="'b' + c"
+              class="px-2.5 py-1 rounded-full border text-xs capitalize"
+              :class="groupB.has(c) ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
+              @click="toggleCategory('B', c)"
+            >{{ c }}</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
@@ -191,8 +221,11 @@ function barWidth(total, maxAbs) {
         <div v-for="it in sideA.items" :key="it.entityId" class="mb-1.5">
           <button class="w-full flex items-center gap-2 group" @click="selectEntity(it.entityId, 'A')">
             <span
-              class="w-28 text-sm text-right truncate shrink-0"
-              :class="selected?.entityId === it.entityId && selected?.group === 'A' ? 'font-semibold text-slate-900' : 'text-slate-600'"
+              :title="it.name"
+              class="w-28 text-sm text-right truncate shrink-0 transition-colors"
+              :class="selected?.entityId === it.entityId && selected?.group === 'A'
+                ? 'font-semibold text-indigo-700'
+                : 'text-slate-600 group-hover:text-indigo-600'"
             >{{ it.name }}</span>
             <span class="flex-1 h-4 bg-slate-100 rounded overflow-hidden relative">
               <span
@@ -215,8 +248,11 @@ function barWidth(total, maxAbs) {
         <div v-for="it in sideB.items" :key="it.entityId" class="mb-1.5">
           <button class="w-full flex items-center gap-2 group" @click="selectEntity(it.entityId, 'B')">
             <span
-              class="w-28 text-sm text-right truncate shrink-0"
-              :class="selected?.entityId === it.entityId && selected?.group === 'B' ? 'font-semibold text-slate-900' : 'text-slate-600'"
+              :title="it.name"
+              class="w-28 text-sm text-right truncate shrink-0 transition-colors"
+              :class="selected?.entityId === it.entityId && selected?.group === 'B'
+                ? 'font-semibold text-indigo-700'
+                : 'text-slate-600 group-hover:text-indigo-600'"
             >{{ it.name }}</span>
             <span class="flex-1 h-4 bg-slate-100 rounded overflow-hidden relative">
               <span

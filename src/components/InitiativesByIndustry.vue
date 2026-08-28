@@ -1,43 +1,32 @@
 <script setup>
 /**
- * Complementare a "Bias tra industrie": quello misura il TONO (cosa dicono),
- * questo misura la COPERTURA (di cosa si parla affatto). Se un dataset taglia
- * intere iniziative su un'industria, si vede subito confrontando le barre.
- * Le 3 barre (journalist/FILAH/TROUT) sono sempre visibili fianco a fianco,
- * non serve selezionare un dataset per volta.
+ * Complementare a "Bias tra industrie": quello misura il TONO, questo la
+ * COPERTURA (di cosa si parla affatto). Conteggio a livello di SINGOLO
+ * PARTECIPANTE (non di iniziativa aggregata): un'iniziativa e' nota per
+ * un'industria in un dataset se ALMENO UN partecipante di quella
+ * iniziativa/industria ha in_filah (o in_trout) = True - stessa logica del
+ * calcolo di riferimento in pandas (explode + groupby(initiative,industry).any()).
  */
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
-import { getInitiativeParticipants, getInitiatives } from '../utils/dataManager'
-import { buildPersonTopicSentiment } from '../utils/personTopicSentiment'
+import { getInitiativeParticipants } from '../utils/dataManager'
 
-const CATEGORIES = ['tourism', 'small vessel', 'large vessel', 'unclassified']
 const DATASETS = [
-  { key: 'journalist', label: 'journalist', color: '#0f172a' },
-  { key: 'FILAH', label: 'FILAH', color: '#f97316' },
-  { key: 'TROUT', label: 'TROUT', color: '#2563eb' },
+  { key: 'journalist', label: 'journalist', color: '#6E8B3D' },
+  { key: 'FILAH', label: 'FILAH', color: '#1f77b4' },
+  { key: 'TROUT', label: 'TROUT', color: '#ff7f0e' },
 ]
 
-const initiatives = ref([])
-const topicIndustry = ref(new Map())
+const props = defineProps({ aggregateFishing: { type: Boolean, default: false } })
+
+const participants = ref([])
 const loading = ref(true)
 const svgRef = ref(null)
 const wrapperRef = ref(null)
 const svgWidth = ref(900)
 
 onMounted(async () => {
-  const [participants, init] = await Promise.all([getInitiativeParticipants(), getInitiatives()])
-  initiatives.value = init
-
-  const rows = buildPersonTopicSentiment(participants, init)
-  const map = new Map()
-  for (const r of rows) {
-    const inds = r.industry && r.industry.length ? r.industry : ['unclassified']
-    if (!map.has(r.topic_id)) map.set(r.topic_id, new Set())
-    inds.forEach((i) => map.get(r.topic_id).add(i))
-  }
-  topicIndustry.value = new Map([...map.entries()].map(([k, v]) => [k, [...v]]))
-
+  participants.value = await getInitiativeParticipants()
   loading.value = false
   await nextTick()
   if (wrapperRef.value) {
@@ -49,25 +38,50 @@ onMounted(async () => {
   draw()
 })
 
-function isKnown(init, datasetKey) {
-  if (datasetKey === 'journalist') return true
-  return datasetKey === 'FILAH' ? init.in_filah : init.in_trout
-}
+const categories = computed(() => (
+  props.aggregateFishing ? ['tourism', 'fishing', 'unclassified'] : ['tourism', 'small vessel', 'large vessel', 'unclassified']
+))
 
 const counts = computed(() => {
-  return CATEGORIES.map((cat) => {
-    const perDataset = {}
-    for (const ds of DATASETS) {
-      const ids = new Set()
-      for (const init of initiatives.value) {
-        if (!isKnown(init, ds.key)) continue
-        const inds = topicIndustry.value.get(init.topic_id) || ['unclassified']
-        if (inds.includes(cat)) ids.add(init.id)
-      }
-      perDataset[ds.key] = ids.size
+  // esplodi per industria (come explode("industry") in pandas) - a differenza
+  // del codice di riferimento, teniamo "unclassified" invece di scartare le
+  // righe senza industria (dropna)
+  const exploded = []
+  for (const p of participants.value) {
+    let inds = p.industry && p.industry.length ? p.industry : ['unclassified']
+    if (props.aggregateFishing) {
+      inds = inds.map((i) => (i === 'small vessel' || i === 'large vessel' ? 'fishing' : i))
     }
-    return { category: cat, ...perDataset }
-  })
+    for (const ind of inds) {
+      exploded.push({ initiative_id: p.initiative_id, industry: ind, in_filah: p.in_filah, in_trout: p.in_trout })
+    }
+  }
+
+  // raggruppa per (initiative_id, industria): ANY(in_filah), ANY(in_trout)
+  const groups = new Map()
+  for (const e of exploded) {
+    const key = `${e.initiative_id}|${e.industry}`
+    if (!groups.has(key)) groups.set(key, { initiative_id: e.initiative_id, industry: e.industry, in_filah: false, in_trout: false })
+    const g = groups.get(key)
+    g.in_filah = g.in_filah || !!e.in_filah
+    g.in_trout = g.in_trout || !!e.in_trout
+  }
+
+  // conta iniziative DISTINTE per industria per dataset
+  const tally = Object.fromEntries(categories.value.map((c) => [c, { journalist: new Set(), FILAH: new Set(), TROUT: new Set() }]))
+  for (const g of groups.values()) {
+    if (!tally[g.industry]) continue
+    tally[g.industry].journalist.add(g.initiative_id)
+    if (g.in_filah) tally[g.industry].FILAH.add(g.initiative_id)
+    if (g.in_trout) tally[g.industry].TROUT.add(g.initiative_id)
+  }
+
+  return categories.value.map((cat) => ({
+    category: cat,
+    journalist: tally[cat].journalist.size,
+    FILAH: tally[cat].FILAH.size,
+    TROUT: tally[cat].TROUT.size,
+  }))
 })
 
 function draw() {

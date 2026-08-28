@@ -3,12 +3,28 @@ import { ref, onMounted, computed } from 'vue'
 import { filterStore, resetSelection } from '../store/filterStore'
 import { getPersons } from '../utils/dataManager'
 
+// showPersonFilter: alcune pagine (es. La bilancia) non usano la selezione
+// persona su nessun widget - in quel caso il blocco "Persona" e' inutile,
+// meglio non mostrarlo che lasciarlo li' senza effetto
+//
+// showFishingToggle + aggregateFishing (v-model): il toggle "Aggrega fishing"
+// vive qui perche' cambia TUTTI i widget della pagina (come il Dataset sopra),
+// non solo uno - ha senso vivere accanto agli altri filtri "globali di pagina"
+const props = defineProps({
+  showPersonFilter: { type: Boolean, default: true },
+  showFishingToggle: { type: Boolean, default: false },
+  aggregateFishing: { type: Boolean, default: false },
+})
+const emit = defineEmits(['update:aggregateFishing'])
+
 const persons = ref([])
 
 onMounted(async () => {
   persons.value = await getPersons()
 })
 
+// persone senza opinioni registrate in nessun dataset (es. Sean) vengono comunque
+// mostrate ma segnalate, cosi' non sembra un bottone "rotto" se selezionato
 const sortedPersons = computed(() =>
   [...persons.value].sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id)),
 )
@@ -40,7 +56,23 @@ function selectPerson(id) {
       </p>
     </div>
 
-    <div>
+    <div v-if="props.showFishingToggle">
+      <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Industrie</h3>
+      <button
+        class="w-full px-3 py-1.5 rounded-md border text-sm text-left"
+        :class="aggregateFishing
+          ? 'bg-slate-900 text-white border-slate-900'
+          : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'"
+        @click="emit('update:aggregateFishing', !aggregateFishing)"
+      >
+        Aggrega fishing
+      </button>
+      <p class="text-xs text-slate-400 mt-2">
+        Unisce small vessel e large vessel in una sola categoria, in tutti i widget della pagina.
+      </p>
+    </div>
+
+    <div v-if="props.showPersonFilter">
       <div class="flex items-center justify-between mb-2">
         <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Persona</h3>
         <button
