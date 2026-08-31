@@ -1,18 +1,10 @@
 <script setup>
-/**
- * Mappa zoomabile (d3-zoom): poligoni delle isole/riserve come sfondo, punti
- * colorati per zona, città come punti di riferimento. Tutti i dettagli (luogo
- * o isola) compaiono in un tooltip all'hover, stile BAIT - niente pannello
- * laterale fisso, cosi' la mappa puo' occupare tutta la larghezza pagina.
- * Quando un viaggio e' selezionato in TripTimeline, il percorso (tappe in
- * ordine) viene disegnato ed evidenziato qui.
- */
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
-import { filterStore } from '../store/filterStore'
-import { getOceanusGeo, getPlaces, getTripStops } from '../utils/dataManager'
-import { isKnownInDataset } from '../utils/personTopicSentiment'
-import { ZONE_ORDER, zoneColor } from '../utils/zones'
+import { filterStore } from '../shared/filterStore'
+import { getOceanusGeo, getPlaces, getTripStops } from '../shared/dataManager'
+import { isKnownInDataset } from '../shared/personTopicSentiment'
+import { ZONE_ORDER, zoneColor } from './zones'
 
 const geo = ref(null)
 const places = ref([])
@@ -108,10 +100,6 @@ function draw() {
   }
   function hideTooltip() { tooltip.style('opacity', 0) }
 
-    // ogni isola/riserva ha un colore pastello distinto (prima erano tutte dello
-  // stesso verde, indistinguibili a colpo d'occhio) - non e' legato alle zone
-  // dei luoghi (quella legenda resta separata), serve solo a distinguere le
-  // sagome tra loro sulla mappa
   const ISLAND_PALETTE = ['#bfdbfe', '#fde68a', '#bbf7d0', '#ddd6fe', '#fbcfe8', '#fed7aa', '#a5f3fc', '#fecaca', '#d9f99d', '#e9d5ff']
   const polygons = geo.value.features.filter((f) => f.geometry.type === 'Polygon')
   const islandColor = d3.scaleOrdinal().domain(polygons.map((p) => p.properties.Name)).range(ISLAND_PALETTE)
@@ -205,11 +193,11 @@ watch([visiblePlaces, selectedTripRoute, mapWidth], () => draw())
           percorso: <b>{{ filterStore.selectedTrip }}</b>
           <button class="text-indigo-600 hover:underline ml-1" @click="filterStore.selectedTrip = null">✕</button>
         </span>
-        <button class="text-sm text-indigo-600 hover:underline" @click="resetZoom">reimposta zoom</button>
+        <button class="text-sm text-indigo-600 hover:underline" @click="resetZoom">Reset zoom</button>
       </div>
     </div>
     <p class="text-sm text-slate-400 mb-3">
-      Dataset: <b>{{ filterStore.activeDataset }}</b> · rotellina per zoom, trascina per spostarti, hover per i dettagli
+      Dataset: <b>{{ filterStore.activeDataset }}</b> 
     </p>
 
     <div class="flex flex-wrap gap-3 mb-3 text-sm">
@@ -219,7 +207,7 @@ watch([visiblePlaces, selectedTripRoute, mapWidth], () => draw())
       </span>
     </div>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <div v-else ref="wrapperRef" class="w-full">
       <svg ref="svgRef" class="border border-slate-100 rounded-lg w-full"></svg>
     </div>

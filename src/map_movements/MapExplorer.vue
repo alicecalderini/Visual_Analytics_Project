@@ -1,8 +1,8 @@
 <script setup>
-import FilterSidebar from '../components/FilterSidebar.vue'
-import TripsByZone from '../components/TripsByZone.vue'
-import TripTimeline from '../components/TripTimeline.vue'
-import OceanusMap from '../components/OceanusMap.vue'
+import FilterSidebar from '../shared/FilterSidebar.vue'
+import TripsByZone from './TripsByZone.vue'
+import TripTimeline from './TripTimeline.vue'
+import OceanusMap from './OceanusMap.vue'
 </script>
 
 <template>

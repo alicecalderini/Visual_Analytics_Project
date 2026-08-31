@@ -1,36 +1,10 @@
 <script setup>
-/**
- * TopicSentimentHeatmap
- * ----------------------
- * Vista compatta: il toggle "Per topic / Per industria" sta accanto al titolo.
- * I filtri secondari (Mostra, Filtra topic) stanno in fondo.
- *
- * "Aggrega per industria" spezza le righe in 2 gruppi affiancati SOLO se sono
- * piu' di 7.
- *
- * DISEGNO: draw() e' AUTOCONTENUTA. I margini (top/destro/sinistro/gap centrale)
- * sono variabili LOCALI a ogni chiamata, non ref condivisi tra chiamate diverse -
- * ogni draw() riparte sempre dalla base e fa al massimo 2 passate (disegna,
- * misura con getBoundingClientRect, corregge se serve, ridisegna una volta sola).
- * Una guardia (isDrawing/redrawPending) impedisce che due draw() si sovrappongano:
- * se ne arriva una nuova mentre una e' in corso, si accoda UNA sola richiesta,
- * eseguita a fine della precedente. Questo elimina la classe di bug vista prima
- * (piu' ref auto-osservanti che potevano misurare uno stato del DOM a meta'
- * transizione e "congelare" una correzione sbagliata, con margini che crescevano
- * senza mai stabilizzarsi).
- *
- * Righe: TUTTE le entita' il cui nodo esiste nel dataset attivo, anche quelle che
- * non hanno mai espresso un'opinione (es. "Sean") - riga vuota, non invisibile.
- *
- * Interazione: click su una riga -> filterStore.selectedPerson. Hover su una
- * colonna (solo vista "Per topic") -> filterStore.selectedTopic, collegato a
- * TopicVoicesPanel.
- */
+
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
-import { getInitiativeParticipants, getInitiatives, getPersons, getOrganizations } from '../utils/dataManager'
-import { filterStore } from '../store/filterStore'
-import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
+import { getInitiativeParticipants, getInitiatives, getPersons, getOrganizations } from '../shared/dataManager'
+import { filterStore } from '../shared/filterStore'
+import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../shared/personTopicSentiment'
 
 const loading = ref(true)
 const rows = ref([])
@@ -50,10 +24,8 @@ const SPLIT_THRESHOLD = 7
 const TOPIC_CELL_W = 30.5
 const INDUSTRY_CELL_W = 88
 const SPLIT_GAP_BASE = 40
-const ROW_H = 26 // un po' piu' grande di prima (26): rende "per topic" meno
-                        // stretta rispetto a "per industria" senza aggiungere
-                        // padding artificiale - lo spazio in piu' e' contenuto vero
-const TOPIC_ROW_H = 28.5  // idem, altezza riga leggermente maggiore in questa vista
+const ROW_H = 26 
+const TOPIC_ROW_H = 28.5 
 
 
 onMounted(async () => {
@@ -375,7 +347,7 @@ watch(() => filterStore.selectedTopic, () => draw())
   :class="viewMode === 'topic' ? 'px-10' : 'px-4'"
 >
     <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
-      <h2 class="text-lg font-semibold">Sentiment per persona/organizzazione</h2>
+      <h2 class="text-lg font-semibold">Sentiment by person/organization</h2>
       <div class="inline-flex rounded-lg border border-slate-300 overflow-hidden text-sm shrink-0">
         <button
           v-for="opt in [['topic','Per topic'],['industry','Per industria']]" :key="opt[0]"
@@ -386,14 +358,14 @@ watch(() => filterStore.selectedTopic, () => draw())
       </div>
     </div>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <div v-else class="inline-block max-w-full overflow-auto">
       <svg ref="containerRef"></svg>
     </div>
 
     <div class="flex flex-col gap-3 mt-5 pt-4 border-t border-slate-100">
       <div class="flex items-center gap-3 text-sm">
-        <span class="text-slate-500 w-24 shrink-0">Mostra</span>
+        <span class="text-slate-500 w-24 shrink-0">Show</span>
         <div class="flex gap-1">
           <button
             v-for="opt in [['both','Entrambi'],['person','Persone'],['organization','Organizzazioni']]" :key="opt[0]"
@@ -405,7 +377,7 @@ watch(() => filterStore.selectedTopic, () => draw())
       </div>
 
       <div v-if="viewMode === 'topic'" class="flex items-center gap-3 text-sm">
-        <span class="text-slate-500 w-24 shrink-0">Filtra topic</span>
+        <span class="text-slate-500 w-24 shrink-0">Filter topic</span>
         <div class="flex items-center gap-1 flex-wrap">
           <button
             v-for="ind in ALL_INDUSTRIES" :key="ind"

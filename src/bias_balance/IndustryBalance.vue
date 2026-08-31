@@ -1,27 +1,9 @@
 <script setup>
-/**
- * Confronta il sentiment aggregato tra due gruppi di industrie a scelta.
- *
- * Ogni persona/organizzazione compare SOLO nel lato dove ha davvero espresso
- * un'opinione su quell'industria - non "chi e' contro A finisce visualizzato
- * su B" (a differenza della bilancia di BAIT). Il numero e' la SOMMA dei
- * sentiment (stesso calcolo del report), la vista sono due liste a barre
- * orizzontali affiancate.
- *
- * Selezione delle categorie in un gruppo: cliccarne una SOSTITUISCE quella
- * gia' scelta (tourism dopo unclassified cambia, non somma) - l'UNICA
- * eccezione e' small vessel + large vessel, che possono coesistere (sono
- * entrambe "fishing" nella sostanza) e quindi SI sommano tra loro. "Aggrega
- * fishing" (nella sidebar, vale per tutta la pagina) le unisce direttamente
- * in un'unica categoria "fishing".
- *
- * Click su una barra -> pannello a destra con TUTTI i sentiment che
- * compongono quel totale per quella persona (topic, valore, motivazione).
- */
+
 import { ref, computed, onMounted, watch } from 'vue'
-import { filterStore } from '../store/filterStore'
-import { getInitiativeParticipants, getInitiatives, getPersons, getOrganizations } from '../utils/dataManager'
-import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
+import { filterStore } from '../shared/filterStore'
+import { getInitiativeParticipants, getInitiatives, getPersons, getOrganizations } from '../shared/dataManager'
+import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../shared/personTopicSentiment'
 
 const props = defineProps({ aggregateFishing: { type: Boolean, default: false } })
 
@@ -29,10 +11,6 @@ const rows = ref([])
 const entityMeta = ref(new Map()) // id -> { name, type }
 const loading = ref(true)
 
-// righe fisse per il layout a griglia dei pulsanti categoria (si allineano
-// visivamente a "cosa si puo' sommare"). Con l'aggregazione attiva restano
-// solo 3 categorie indipendenti (nessuna si somma piu' a un'altra) - entrano
-// comode su una riga sola, non serve andare a capo.
 const categoryRows = computed(() => (
   props.aggregateFishing ? [['tourism', 'unclassified', 'fishing']] : [['tourism', 'unclassified'], ['small vessel', 'large vessel']]
 ))
@@ -42,11 +20,6 @@ const groupB = ref(new Set(['small vessel', 'large vessel']))
 const entityTypeFilter = ref('both')
 const selected = ref(null) // { entityId, group: 'A' | 'B' }
 
-// il toggle "Aggrega fishing" ora vive nella sidebar (v-model dal genitore) -
-// quando cambia, la selezione corrente ("Small Vessel + Large Vessel") non ha
-// piu' senso letterale (le categorie diventano ['tourism','fishing','unclassified']),
-// quindi la rimappiamo su un default coerente invece di lasciarla "orfana"
-// (bottoni senza nulla selezionato ma totale ancora popolato con l'etichetta vecchia)
 watch(() => props.aggregateFishing, (agg) => {
   groupA.value = new Set(['tourism'])
   groupB.value = new Set(agg ? ['fishing'] : ['small vessel', 'large vessel'])
@@ -71,10 +44,6 @@ function industryOf(row) {
   return raw.map((i) => (i === 'small vessel' || i === 'large vessel' ? 'fishing' : i))
 }
 
-// "cluster" di una categoria: small vessel e large vessel condividono lo
-// stesso cluster ("fishing"), tutte le altre sono cluster a se stanti -
-// selezionare una categoria dello STESSO cluster di quella gia' scelta la
-// aggiunge (si sommano), una di un cluster DIVERSO sostituisce la selezione
 function clusterOf(cat) {
   return (cat === 'small vessel' || cat === 'large vessel') ? 'fishing' : cat
 }
@@ -83,7 +52,7 @@ function toggleCategory(group, cat) {
   const current = group === 'A' ? groupA.value : groupB.value
   const otherSet = group === 'A' ? groupB.value : groupA.value
   const newOther = new Set(otherSet)
-  newOther.delete(cat) // una categoria non puo' stare in entrambi i gruppi
+  newOther.delete(cat) // a category cannot stay in both groups
 
   let newCurrent
   if (current.has(cat)) {
@@ -162,12 +131,10 @@ function barWidth(total, maxAbs) {
 
 <template>
   <div class="border border-slate-200 rounded-lg p-4">
-    <h2 class="text-lg font-semibold mb-4">Bias tra industrie</h2>
+    <h2 class="text-lg font-semibold mb-4">Weighing the bias among industries</h2>
 
-    <!-- "Mostra": stile deliberatamente diverso dai filtri della sidebar (grigio
-         chiaro, non nero pieno) per non sembrare un filtro di pagina come Dataset -->
     <div class="flex items-center gap-3 mb-5 text-sm">
-      <span class="text-slate-500">Mostra</span>
+      <span class="text-slate-500">Show</span>
       <button
         v-for="opt in [['both','Entrambi'],['person','Persone'],['organization','Organizzazioni']]" :key="opt[0]"
         class="px-2.5 py-1 rounded-md border"
@@ -178,12 +145,9 @@ function barWidth(total, maxAbs) {
       >{{ opt[1] }}</button>
     </div>
 
-    <!-- Gruppo A / Gruppo B: stessa griglia [1fr_1fr_320px] delle barre sotto,
-         cosi' ciascun gruppo si allinea esattamente sopra il proprio barplot
-         (la terza colonna, quella del pannello dettaglio, resta vuota qui) -->
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_320px] gap-6 mb-5">
       <div class="flex items-start gap-2 text-sm">
-        <span class="text-slate-500 w-16 shrink-0 pt-1.5">Gruppo A</span>
+        <span class="text-slate-500 w-16 shrink-0 pt-1.5">Group A</span>
         <div class="flex flex-col gap-1.5">
           <div v-for="(row, ri) in categoryRows" :key="ri" class="flex flex-wrap gap-1.5">
             <button
@@ -196,7 +160,7 @@ function barWidth(total, maxAbs) {
         </div>
       </div>
       <div class="flex items-start gap-2 text-sm">
-        <span class="text-slate-500 w-16 shrink-0 pt-1.5">Gruppo B</span>
+        <span class="text-slate-500 w-16 shrink-0 pt-1.5">Group B</span>
         <div class="flex flex-col gap-1.5">
           <div v-for="(row, ri) in categoryRows" :key="ri" class="flex flex-wrap gap-1.5">
             <button
@@ -210,14 +174,14 @@ function barWidth(total, maxAbs) {
       </div>
     </div>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <div v-else class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_320px] gap-6 items-start">
       <div>
         <div class="text-sm text-slate-500 mb-1 capitalize">{{ groupLabel(groupA) }}</div>
         <div class="text-2xl font-bold mb-3" :class="sideA.grandTotal >= 0 ? 'text-emerald-600' : 'text-rose-600'">
           {{ sideA.grandTotal >= 0 ? '+' : '' }}{{ sideA.grandTotal.toFixed(2) }}
         </div>
-        <div v-if="!sideA.items.length" class="text-slate-400 text-sm">Nessuna opinione nota.</div>
+        <div v-if="!sideA.items.length" class="text-slate-400 text-sm">No known opinion.</div>
         <div v-for="it in sideA.items" :key="it.entityId" class="mb-1.5">
           <button class="w-full flex items-center gap-2 group" @click="selectEntity(it.entityId, 'A')">
             <span
@@ -244,7 +208,7 @@ function barWidth(total, maxAbs) {
         <div class="text-2xl font-bold mb-3" :class="sideB.grandTotal >= 0 ? 'text-emerald-600' : 'text-rose-600'">
           {{ sideB.grandTotal >= 0 ? '+' : '' }}{{ sideB.grandTotal.toFixed(2) }}
         </div>
-        <div v-if="!sideB.items.length" class="text-slate-400 text-sm">Nessuna opinione nota.</div>
+        <div v-if="!sideB.items.length" class="text-slate-400 text-sm">No known opinions.</div>
         <div v-for="it in sideB.items" :key="it.entityId" class="mb-1.5">
           <button class="w-full flex items-center gap-2 group" @click="selectEntity(it.entityId, 'B')">
             <span
@@ -268,12 +232,12 @@ function barWidth(total, maxAbs) {
 
       <div class="border-l border-slate-100 pl-6">
         <div v-if="!detail" class="text-slate-400 text-sm">
-          Click su una persona/organizzazione per vedere il dettaglio dei suoi sentiment su questo gruppo di industrie.
+          Click on a person/organization to see the detail of their sentiment on this group of industries.
         </div>
         <div v-else>
           <div class="font-semibold text-base mb-1">{{ detail.name }}</div>
           <div class="text-sm text-slate-500 mb-3">
-            Totale: <b :class="detail.total >= 0 ? 'text-emerald-600' : 'text-rose-600'">{{ detail.total >= 0 ? '+' : '' }}{{ detail.total.toFixed(2) }}</b>
+            Total: <b :class="detail.total >= 0 ? 'text-emerald-600' : 'text-rose-600'">{{ detail.total >= 0 ? '+' : '' }}{{ detail.total.toFixed(2) }}</b>
           </div>
           <ul class="flex flex-col gap-3 max-h-96 overflow-y-auto pr-1">
             <li v-for="(r, i) in detail.rows" :key="i" class="text-sm border-b border-slate-100 pb-2">

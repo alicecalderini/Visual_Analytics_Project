@@ -1,25 +1,11 @@
 <script setup>
-/**
- * Timeline dei viaggi per persona. Rispetto a BAIT: niente pie-chart nelle
- * iniziali (le percentuali per zona restano solo nel tooltip, come testo -
- * a quella scala un grafico e' illeggibile), niente barre nei singoli viaggi
- * (trattino uniforme, il dettaglio delle tappe resta nel tooltip - quella
- * parte di BAIT funzionava gia' bene, l'ho tenuta).
- *
- * Interazioni:
- *  - hover sull'avatar -> tooltip con % di tappe per zona di quella persona
- *  - hover su un trattino (viaggio) -> tooltip con orari e tappe visitate
- *  - click su un trattino -> filterStore.selectedTrip (evidenzia il percorso
- *    sulla mappa sotto)
- *  - filterStore.selectedZone / selectedPerson (dal widget sopra o dalla
- *    sidebar) attenuano i viaggi che non corrispondono, invece di nasconderli
- */
+
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
-import { filterStore } from '../store/filterStore'
-import { getTrips, getTripStops, getPlaces, getPersons } from '../utils/dataManager'
-import { isKnownInDataset } from '../utils/personTopicSentiment'
-import { zoneColor } from '../utils/zones'
+import { filterStore } from '../shared/filterStore'
+import { getTrips, getTripStops, getPlaces, getPersons } from '../shared/dataManager'
+import { isKnownInDataset } from '../shared/personTopicSentiment'
+import { zoneColor } from './zones'
 
 const trips = ref([])
 const tripStops = ref([])
@@ -28,18 +14,10 @@ const persons = ref([])
 const loading = ref(true)
 const containerRef = ref(null)
 const wrapperRef = ref(null)
-const svgWidth = ref(1040) // valore iniziale, corretto subito dopo il mount misurando il contenitore
+const svgWidth = ref(1040) 
 
-// il colore non ha nessun significato informativo (non codifica nulla), quindi
-// un solo colore neutro per tutti gli avatar - un colore diverso per persona
-// distoglierebbe l'attenzione senza aggiungere informazione reale
-const AVATAR_COLOR = '#4f46e5'
+const AVATAR_COLOR = '#b63576'
 
-// bug nei dati sorgente: una parte dei viaggi ha l'anno scritto "0040" invece
-// di "2040" (probabilmente un troncamento a monte) - stesso mese/giorno,
-// stesso periodo reale, solo il prefisso anno è sbagliato. Senza questa
-// correzione l'asse temporale si spaccherebbe in due gruppi lontanissimi
-// (anno 40 e anno 2040) invece di un'unica timeline aprile-agosto coerente.
 function fixDate(dateStr) {
   if (!dateStr) return dateStr
   return dateStr.replace(/^0040/, '2040')
@@ -54,9 +32,6 @@ onMounted(async () => {
   loading.value = false
   await nextTick()
 
-  // larghezza reattiva: il widget riempie tutto lo spazio disponibile (come in
-  // BAIT, niente scroll orizzontale) invece di una larghezza fissa - i trattini
-  // dei viaggi restano sottili ma si distribuiscono su tutta la larghezza vera
   if (wrapperRef.value) {
     const measure = () => { svgWidth.value = Math.max(600, wrapperRef.value.clientWidth) }
     measure()
@@ -132,25 +107,13 @@ function draw() {
     .attr('y2', (d) => y(d.id) + y.bandwidth() / 2)
     .attr('stroke', '#f1f5f9')
 
-  // avatar per persona (cerchio + iniziali) - hover mostra, in TESTO (non in un
-  // grafico), quante TAPPE (non viaggi!) ha fatto in ciascuna zona. E' una
-  // metrica diversa da "Viaggi per zona" sopra (che conta viaggi distinti, non
-  // tappe) - un viaggio puo' toccare piu' luoghi della stessa zona (es. piu'
-  // terminal dei traghetti, tutti "government"), quindi qui il numero e' quasi
-  // sempre piu' alto. Etichettato esplicitamente "tappe" per non confondere le
-  // due cose. Il conteggio viaggi vive solo nella pagina Membri, qui non serve.
   const avatar = svg.selectAll('g.avatar').data(rows).join('g')
     .attr('class', 'avatar')
     .attr('transform', (d) => `translate(${margin.left - 30},${y(d.id) + y.bandwidth() / 2})`)
     .style('cursor', 'pointer')
     .on('click', (event, d) => { filterStore.selectedPerson = filterStore.selectedPerson === d.id ? null : d.id })
     .on('mouseenter', (event, d) => {
-      // conta le TAPPE (non i viaggi distinti) per zona - stessa identica
-      // metrica del widget "Tappe per zona" sopra, cosi' i numeri combaciano
-      // sempre. Un viaggio puo' toccare piu' luoghi della stessa zona (es. piu'
-      // terminal traghetti, tutti "government"), quindi contare i viaggi
-      // distinti sottostimerebbe: per "government" risulterebbe 48 invece
-      // delle 123 tappe reali. Le tappe sono la misura corretta qui.
+
       const myTripIds = new Set(visibleTrips.value.filter((t) => t.person_id === d.id).map((t) => t.id))
       const tally = new Map()
       let total = 0
@@ -192,7 +155,6 @@ function draw() {
     .style('pointer-events', 'none')
     .text((d) => (d.name || d.id).split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase())
 
-  // trattini dei viaggi - uniformi, niente proporzioni codificate nel segno stesso
   const tripsData = rows.flatMap((p) => visibleTrips.value.filter((t) => t.person_id === p.id))
 
   function isDimmed(t) {
@@ -210,7 +172,7 @@ function draw() {
     .attr('y', (d) => y(d.person_id) + y.bandwidth() / 2 - 12)
     .attr('height', 24)
     .attr('rx', 1.5)
-    .attr('fill', '#6366f1')
+    .attr('fill', '#b63576')
     .attr('stroke', (d) => (d.id === filterStore.selectedTrip ? '#f59e0b' : 'none'))
     .attr('stroke-width', (d) => (d.id === filterStore.selectedTrip ? 2 : 0))
     .attr('opacity', (d) => (isDimmed(d) ? 0.2 : 0.85))
@@ -243,13 +205,12 @@ watch([visibleTrips, svgWidth, () => filterStore.selectedPerson, () => filterSto
 
 <template>
   <div class="border border-slate-200 rounded-lg p-4">
-    <h2 class="font-semibold text-lg mb-1">Viaggi nel tempo</h2>
+    <h2 class="font-semibold text-lg mb-1">Trips in time</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
-      · hover sull'iniziale per le zone visitate, hover su un viaggio per le tappe, click per evidenziarlo sulla mappa
     </p>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <div v-else ref="wrapperRef" class="w-full">
       <svg ref="containerRef"></svg>
     </div>

@@ -1,5 +1,5 @@
 <script setup>
-import Navbar from './components/Navbar.vue'
+import Navbar from './shared/Navbar.vue'
 </script>
 
 <!-- keep-alive evita di ricostruire i widget D3 ogni volta che si cambia vista -->

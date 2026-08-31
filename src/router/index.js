@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import MembersExplorer from '../views/MembersExplorer.vue'
-import MapExplorer from '../views/MapExplorer.vue'
-import BiasBalance from '../views/BiasBalance.vue'
+import MembersExplorer from '../cotefoo_members/MembersExplorer.vue'
+import MapExplorer from '../map_movements/MapExplorer.vue'
+import BiasBalance from '../bias_balance/BiasBalance.vue'
 
 const routes = [
   { path: '/', name: 'membersExplorer', component: MembersExplorer },

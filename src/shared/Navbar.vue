@@ -2,15 +2,15 @@
 import { RouterLink } from 'vue-router'
 
 const links = [
-  { to: '/', label: 'Membri COOTEFOO' },
-  { to: '/map', label: 'Mappa e spostamenti' },
-  { to: '/balance', label: 'La bilancia' },
+  { to: '/', label: 'COOTEFOO Members' },
+  { to: '/map', label: 'Map & Movements' },
+  { to: '/balance', label: 'Weigh-In' },
 ]
 </script>
 
 <template>
   <nav class="flex items-center gap-1 px-4 py-2 bg-slate-900 text-slate-100">
-    <span class="font-semibold mr-4 tracking-tight">COOTEFOO Visual Analytics</span>
+    <span class="font-semibold mr-4 tracking-tight">INSPECTING CURRENTS</span>
     <RouterLink
       v-for="link in links"
       :key="link.to"

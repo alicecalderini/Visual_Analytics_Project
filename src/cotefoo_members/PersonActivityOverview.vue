@@ -1,11 +1,11 @@
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
-import { filterStore } from '../store/filterStore'
+import { filterStore } from '../shared/filterStore'
 import {
   getInitiativeParticipants, getInitiatives, getInitiativeStatusTimeline, getTrips, getPersons, getTopics,
-} from '../utils/dataManager'
-import { buildPersonTopicSentiment, readableLabel } from '../utils/personTopicSentiment'
+} from '../shared/dataManager'
+import { buildPersonTopicSentiment, readableLabel } from '../shared/personTopicSentiment'
 
 const participants = ref([])
 const initiatives = ref([])
@@ -182,23 +182,23 @@ watch([stats, globalMax], () => nextTick(draw))
 
 <template>
   <div class="border border-slate-200 rounded-lg p-4">
-    <h2 class="font-semibold text-lg mb-1">Attività della persona selezionata</h2>
+    <h2 class="font-semibold text-lg mb-1">Activities of selected person</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
-      <span class="ml-1">— asse fisso, confrontabile tra persone/dataset</span>
+  
     </p>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <div v-else-if="!filterStore.selectedPerson" class="text-slate-400 text-sm py-8 text-center">
-      Seleziona una persona dalla sidebar per vedere i dettagli.
+      Select a person to see details.
     </div>
     <template v-else>
       <div class="flex flex-wrap gap-8">
         <svg ref="svgRef" class="shrink-0"></svg>
 
         <div class="flex-1 min-w-[220px]">
-          <div class="text-slate-500 text-sm mb-2">Topic su cui si è espresso/a, per industria</div>
-          <div v-if="!topicsByIndustry.length" class="text-slate-400 text-sm">Nessuno.</div>
+          <div class="text-slate-500 text-sm mb-2">Topic on which they expressed on</div>
+          <div v-if="!topicsByIndustry.length" class="text-slate-400 text-sm">None.</div>
           <div v-for="g in topicsByIndustry" :key="g.industry" class="mb-3">
             <div class="text-sm font-medium text-slate-600 mb-1">{{ readableLabel(g.industry) }}</div>
             <div class="flex flex-wrap gap-1.5">
@@ -215,7 +215,7 @@ watch([stats, globalMax], () => nextTick(draw))
 
       <div class="mt-5 pt-4 border-t border-slate-100">
         <div class="text-slate-500 text-sm mb-2">
-          Iniziative ({{ stats.initiativeDetails.length }})
+          Initiatives ({{ stats.initiativeDetails.length }})
         </div>
         <ul class="flex flex-col gap-3 max-h-72 overflow-y-auto pr-1">
           <li v-for="init in stats.initiativeDetails" :key="init.id" class="text-base border-b border-slate-100 pb-3">

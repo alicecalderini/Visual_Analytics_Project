@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
-import { filterStore } from '../store/filterStore'
-import { getInitiativeParticipants, getInitiatives, getTopics } from '../utils/dataManager'
-import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
+import { filterStore } from '../shared/filterStore'
+import { getInitiativeParticipants, getInitiatives, getTopics } from '../shared/dataManager'
+import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../shared/personTopicSentiment'
 
 const rows = ref([])
 const topicLabel = ref(new Map())
@@ -120,13 +120,13 @@ watch([topicAverages, () => filterStore.selectedTopic], () => nextTick(draw))
 
 <template>
   <div class="border border-slate-200 rounded-lg p-4">
-    <h2 class="font-semibold text-lg mb-1">Sentiment medio per topic</h2>
+    <h2 class="font-semibold text-lg mb-1">Average sentiment by topic</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
-      <span v-if="filterStore.selectedPerson"> — cerchio bianco = posizione di <b>{{ filterStore.selectedPerson }}</b></span>
+      <span v-if="filterStore.selectedPerson"> — white circle = position of <b>{{ filterStore.selectedPerson }}</b></span>
     </p>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <svg v-else ref="svgRef"></svg>
   </div>
 </template>

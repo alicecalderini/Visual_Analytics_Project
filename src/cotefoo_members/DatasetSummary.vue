@@ -1,13 +1,9 @@
 <script setup>
-/**
- * Riepilogo di cosa il dataset attivo "sa" rispetto al quadro completo (journalist):
- * conteggi + elenco esplicito di CHI e QUALI TOPIC mancano - cosi' la giornalista
- * non deve andarseli a cercare a occhio nella heatmap.
- */
+
 import { ref, computed, onMounted } from 'vue'
-import { filterStore } from '../store/filterStore'
-import { getInitiativeParticipants, getInitiatives, getTopics, getPersons, getOrganizations } from '../utils/dataManager'
-import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
+import { filterStore } from '../shared/filterStore'
+import { getInitiativeParticipants, getInitiatives, getTopics, getPersons, getOrganizations } from '../shared/dataManager'
+import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../shared/personTopicSentiment'
 
 const rows = ref([])
 const topicLabel = ref(new Map())
@@ -56,34 +52,34 @@ const summary = computed(() => {
 </script>
 
 <template>
-  <!-- era: <div class="border border-slate-200 rounded-lg p-4 w-80 shrink-0"> -->
+
   <div class="border border-slate-200 rounded-lg p-4 w-full">
   
-  <h2 class="font-semibold text-lg mb-1">Cosa mostra la heatmap</h2>
+  <h2 class="font-semibold text-lg mb-1">Heatmap insights</h2>
   <p class="text-sm text-slate-400 mb-4">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
     </p>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <template v-else>
       <dl class="flex flex-col gap-3 text-base">
         <div class="flex justify-between items-baseline">
-          <dt class="text-slate-500">Persone con opinioni</dt>
+          <dt class="text-slate-500">People with opinions</dt>
           <dd class="font-semibold">{{ summary.persons }}</dd>
         </div>
         <div class="flex justify-between items-baseline">
-          <dt class="text-slate-500">Organizzazioni</dt>
+          <dt class="text-slate-500">Organizations</dt>
           <dd class="font-semibold">{{ summary.orgs }}</dd>
         </div>
         <div class="flex justify-between items-baseline">
-          <dt class="text-slate-500">Topic coperti</dt>
+          <dt class="text-slate-500">Covered topics</dt>
           <dd class="font-semibold">
             {{ summary.topics }}
             <span class="text-slate-400 font-normal">/ {{ summary.totalTopics }}</span>
           </dd>
         </div>
         <div class="flex justify-between items-baseline pt-2 border-t border-slate-100">
-          <dt class="text-slate-500">Opinioni note</dt>
+          <dt class="text-slate-500">Known opinions</dt>
           <dd class="font-semibold">
             {{ summary.cells }}
             <span class="text-slate-400 font-normal">/ {{ summary.totalCells }}</span>
@@ -94,20 +90,20 @@ const summary = computed(() => {
     <div v-if="filterStore.activeDataset !== 'journalist'" class="mt-4 pt-3 border-t border-slate-100 text-sm">
       <template v-if="summary.missingPersons.length">
           <p class="text-slate-500 mb-1">
-            <b>Persone mute</b> in questo dataset (hanno opinioni solo nel quadro completo):
+            <b>Muted people</b> in this dataset
           </p>
           <p class="text-rose-600 font-medium mb-3">{{ summary.missingPersons.join(', ') }}</p>
         </template>
         <template v-if="summary.missingTopics.length">
           <p class="text-slate-500 mb-1">
-            <b>Topic assenti</b> ({{ summary.missingTopics.length }}):
+            <b>Missing topics</b> ({{ summary.missingTopics.length }}):
           </p>
           <p class="text-rose-600 font-medium">
             {{ summary.missingTopics.map((t) => readableLabel(topicLabel.get(t) || t)).join(', ') }}
           </p>
         </template>
         <p v-if="!summary.missingPersons.length && !summary.missingTopics.length" class="text-slate-400">
-          Nessuna persona o topic mancante rispetto al quadro completo.
+          No missing people or topics compared to the full picture.
         </p>
       </div>
     </template>

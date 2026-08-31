@@ -2,8 +2,6 @@ import * as d3 from 'd3'
 
 const BASE_URL = import.meta.env.BASE_URL
 
-// Cache in memoria: ogni file viene scaricato una sola volta per sessione,
-// anche se piu' widget lo richiedono in momenti diversi.
 const cache = {}
 
 function makeLoader(fileName) {
@@ -34,11 +32,6 @@ export const getInitiativeParticipants = makeLoader('initiative_participants.jso
 export const getOceanusGeo = makeLoader('raw_data/oceanus_map.geojson')
 export const getRoadMap = makeLoader('raw_data/road_map.json')
 
-/**
- * Carica in parallelo tutte le tabelle passate (per array di nomi logici) invece di
- * una alla volta - utile nella onMounted() di una vista che ne usa molte insieme.
- * Esempio: const { persons, initiatives } = await loadAll(['persons', 'initiatives'])
- */
 const LOADERS = {
   persons: getPersons,
   organizations: getOrganizations,
@@ -61,7 +54,6 @@ export async function loadAll(names) {
   return Object.fromEntries(entries)
 }
 
-// Percorso corretto per eventuali asset statici (icone, immagini) rispettando il 'base' di Vite
 export function getAssetPath(relativePath) {
   return `${BASE_URL}assets/${relativePath}`
 }

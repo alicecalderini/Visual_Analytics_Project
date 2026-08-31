@@ -1,15 +1,8 @@
 <script setup>
-/**
- * Complementare a "Bias tra industrie": quello misura il TONO, questo la
- * COPERTURA (di cosa si parla affatto). Conteggio a livello di SINGOLO
- * PARTECIPANTE (non di iniziativa aggregata): un'iniziativa e' nota per
- * un'industria in un dataset se ALMENO UN partecipante di quella
- * iniziativa/industria ha in_filah (o in_trout) = True - stessa logica del
- * calcolo di riferimento in pandas (explode + groupby(initiative,industry).any()).
- */
+
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
-import { getInitiativeParticipants } from '../utils/dataManager'
+import { getInitiativeParticipants } from '../shared/dataManager'
 
 const DATASETS = [
   { key: 'journalist', label: 'journalist', color: '#6E8B3D' },
@@ -43,9 +36,7 @@ const categories = computed(() => (
 ))
 
 const counts = computed(() => {
-  // esplodi per industria (come explode("industry") in pandas) - a differenza
-  // del codice di riferimento, teniamo "unclassified" invece di scartare le
-  // righe senza industria (dropna)
+
   const exploded = []
   for (const p of participants.value) {
     let inds = p.industry && p.industry.length ? p.industry : ['unclassified']
@@ -57,7 +48,6 @@ const counts = computed(() => {
     }
   }
 
-  // raggruppa per (initiative_id, industria): ANY(in_filah), ANY(in_trout)
   const groups = new Map()
   for (const e of exploded) {
     const key = `${e.initiative_id}|${e.industry}`
@@ -67,7 +57,6 @@ const counts = computed(() => {
     g.in_trout = g.in_trout || !!e.in_trout
   }
 
-  // conta iniziative DISTINTE per industria per dataset
   const tally = Object.fromEntries(categories.value.map((c) => [c, { journalist: new Set(), FILAH: new Set(), TROUT: new Set() }]))
   for (const g of groups.values()) {
     if (!tally[g.industry]) continue
@@ -151,10 +140,8 @@ watch([counts, svgWidth], () => nextTick(draw))
 
 <template>
   <div class="border border-slate-200 rounded-lg p-4">
-    <h2 class="text-lg font-semibold mb-1">Iniziative per industria e dataset</h2>
-    <p class="text-sm text-slate-400 mb-3">
-      Copertura, non tono: quante iniziative sono note in ciascun dataset, per industria
-    </p>
+    <h2 class="text-lg font-semibold mb-1">Initiatives by industries and dataset</h2>
+ 
 
     <div class="flex flex-wrap gap-4 mb-3 text-sm">
       <span v-for="ds in DATASETS" :key="ds.key" class="flex items-center gap-1.5">
@@ -163,7 +150,7 @@ watch([counts, svgWidth], () => nextTick(draw))
       </span>
     </div>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <div v-else ref="wrapperRef" class="w-full">
       <svg ref="svgRef"></svg>
     </div>

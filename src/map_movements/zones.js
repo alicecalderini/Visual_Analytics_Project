@@ -2,10 +2,10 @@
 // usati coerentemente da TripsByZone, TripTimeline e OceanusMap.
 export const ZONE_COLORS = {
   government: '#6164f3',
-  commercial: '#f59e0b',
+  commercial: '#e5829b',
   tourism: '#10b981',
-  connector: '#64748b',
-  residential: '#ec4899',
+  connector: '#f59e0b',
+  residential: '#ee5b5b',
   industrial: '#78350f',
 }
 

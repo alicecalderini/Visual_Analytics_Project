@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { filterStore } from '../store/filterStore'
-import { getInitiativeParticipants, getInitiatives, getTopics } from '../utils/dataManager'
-import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../utils/personTopicSentiment'
+import { filterStore } from '../shared/filterStore'
+import { getInitiativeParticipants, getInitiatives, getTopics } from '../shared/dataManager'
+import { buildPersonTopicSentiment, isKnownInDataset, readableLabel } from '../shared/personTopicSentiment'
 
 const rows = ref([])
 const topicLabel = ref(new Map())
@@ -35,14 +35,14 @@ function sentimentColor(s) {
 
 <template>
   <div class="border border-slate-200 rounded-lg p-4 w-[420px] shrink-0">
-    <h2 class="font-semibold text-lg mb-1">Chi lo dice</h2>
+    <h2 class="font-semibold text-lg mb-1">Who says that?</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
     </p>
 
-    <div v-if="loading" class="text-slate-400 text-sm">Caricamento...</div>
+    <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <div v-else-if="!filterStore.selectedTopic" class="text-slate-400 text-sm py-8 text-center">
-      Passa il mouse su una barra a sinistra per vedere le singole opinioni.
+      Hover over a bar on the left to see individual opinions.
     </div>
     <div v-else>
       <div class="font-medium text-base mb-2">

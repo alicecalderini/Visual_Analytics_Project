@@ -1,34 +1,24 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { filterStore, resetSelection } from '../store/filterStore'
-import { getPersons } from '../utils/dataManager'
+import { filterStore, resetSelection } from './filterStore' 
+import { getPersons } from './dataManager'
 
-// showPersonFilter: alcune pagine (es. La bilancia) non usano la selezione
-// persona su nessun widget - in quel caso il blocco "Persona" e' inutile,
-// meglio non mostrarlo che lasciarlo li' senza effetto
-//
-// showFishingToggle + aggregateFishing (v-model): il toggle "Aggrega fishing"
-// vive qui perche' cambia TUTTI i widget della pagina (come il Dataset sopra),
-// non solo uno - ha senso vivere accanto agli altri filtri "globali di pagina"
-const props = defineProps({
+const props = defineProps({ 
   showPersonFilter: { type: Boolean, default: true },
   showFishingToggle: { type: Boolean, default: false },
   aggregateFishing: { type: Boolean, default: false },
 })
-const emit = defineEmits(['update:aggregateFishing'])
 
+const emit = defineEmits(['update:aggregateFishing']) 
 const persons = ref([])
 
 onMounted(async () => {
   persons.value = await getPersons()
 })
 
-// persone senza opinioni registrate in nessun dataset (es. Sean) vengono comunque
-// mostrate ma segnalate, cosi' non sembra un bottone "rotto" se selezionato
 const sortedPersons = computed(() =>
   [...persons.value].sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id)),
 )
-
 function selectPerson(id) {
   filterStore.selectedPerson = filterStore.selectedPerson === id ? null : id
 }
@@ -39,6 +29,7 @@ function selectPerson(id) {
     <div>
       <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Dataset</h3>
       <div class="flex flex-col gap-1">
+        
         <button
           v-for="ds in ['journalist', 'FILAH', 'TROUT']"
           :key="ds"
@@ -51,13 +42,11 @@ function selectPerson(id) {
           {{ ds }}
         </button>
       </div>
-      <p class="text-xs text-slate-400 mt-2">
-        Cambia cosa "sanno" tutti i widget della pagina.
-      </p>
     </div>
 
+ 
     <div v-if="props.showFishingToggle">
-      <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Industrie</h3>
+      <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Industries</h3>
       <button
         class="w-full px-3 py-1.5 rounded-md border text-sm text-left"
         :class="aggregateFishing
@@ -65,26 +54,24 @@ function selectPerson(id) {
           : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'"
         @click="emit('update:aggregateFishing', !aggregateFishing)"
       >
-        Aggrega fishing
+        Aggregate fishing
       </button>
-      <p class="text-xs text-slate-400 mt-2">
-        Unisce small vessel e large vessel in una sola categoria, in tutti i widget della pagina.
-      </p>
     </div>
 
     <div v-if="props.showPersonFilter">
       <div class="flex items-center justify-between mb-2">
-        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Persona</h3>
+        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Person</h3>
         <button
           v-if="filterStore.selectedPerson"
           class="text-xs text-indigo-600 hover:underline"
           @click="resetSelection"
         >
-          azzera
+         
+          reset
         </button>
       </div>
       <div class="flex flex-col gap-1">
-        <button
+       <button
           v-for="p in sortedPersons"
           :key="p.id"
           class="px-3 py-1.5 rounded-md border text-sm text-left"
@@ -96,9 +83,6 @@ function selectPerson(id) {
           {{ p.name || p.id }}
         </button>
       </div>
-      <p class="text-xs text-slate-400 mt-2">
-        Seleziona una persona per evidenziarla in tutti i widget.
-      </p>
     </div>
   </aside>
 </template>
