@@ -161,7 +161,9 @@ async function runDraw() {
     tooltip = d3.select('body').append('div')
       .attr('class', 'tsh-tooltip')
       .style('position', 'fixed').style('pointer-events', 'none')
-      .style('background', '#0f172a').style('color', 'white')
+      .style('background', 'white').style('color', '#0f172a')
+      .style('border', '1px solid #e2e8f0')
+      .style('box-shadow', '0 4px 12px rgba(0,0,0,0.12)')
       .style('padding', '6px 10px').style('border-radius', '6px')
       .style('font-size', '12px').style('max-width', '260px')
       .style('opacity', 0).style('z-index', 50)
@@ -177,16 +179,19 @@ async function runDraw() {
     const y = d3.scaleBand().domain(blockRows).range([m.top, m.top + blockRows.length * rowH]).padding(0.08)
     const color = d3.scaleSequential(d3.interpolateRdYlGn).domain([-1, 1])
 
-    svg.selectAll(null).data(cols).enter().append('text')
+      svg.selectAll(null).data(cols).enter().append('text')
       .attr('class', 'col-label')
       .attr('text-anchor', colRotate ? 'start' : 'middle')
       .style('font-size', colFontSize).style('cursor', colRotate ? 'pointer' : 'default')
-      .on('mouseenter click', (event, d) => { if (colRotate) filterStore.selectedTopic = d })
+      .on('mouseenter', (event, d) => {
+        if (colRotate && (event.movementX !== 0 || event.movementY !== 0)) filterStore.selectedTopic = d
+      })
+      .on('click', (event, d) => { if (colRotate) filterStore.selectedTopic = filterStore.selectedTopic === d ? null : d })
       .attr('transform', (d) => (colRotate
         ? `translate(${x(d) + x.bandwidth() / 2},${m.top - 8}) rotate(-55)`
         : `translate(${x(d) + x.bandwidth() / 2},${m.top - 12})`))
-      .style('fill', (d) => (colRotate && filterStore.selectedTopic === d ? '#2563eb' : '#334155'))
-      .style('font-weight', (d) => (colRotate && filterStore.selectedTopic === d ? 700 : 400))
+        .style('fill', (d) => (colRotate && filterStore.selectedTopic === d ? '#6d48b5' : '#334155'))     
+        .style('font-weight', (d) => (colRotate && filterStore.selectedTopic === d ? 700 : 400))
       .text((d) => readableLabel(d))
 
     svg.selectAll(null).data(blockRows).enter().append('text')
@@ -196,7 +201,7 @@ async function runDraw() {
       .attr('y', (d) => y(d) + y.bandwidth() / 2)
       .attr('dy', '0.32em')
       .style('font-size', rowFontSize).style('cursor', 'pointer')
-      .style('fill', (d) => (filterStore.selectedPerson === d ? '#2563eb' : '#334155'))
+      .style('fill', (d) => (filterStore.selectedPerson === d ? '#185ead' : '#334155'))
       .style('font-weight', (d) => (filterStore.selectedPerson === d ? 700 : 400))
       .on('click', (event, d) => selectEntity(d))
       .text((d) => readableLabel(d))
@@ -350,9 +355,9 @@ watch(() => filterStore.selectedTopic, () => draw())
       <h2 class="text-lg font-semibold">Sentiment by person/organization</h2>
       <div class="inline-flex rounded-lg border border-slate-300 overflow-hidden text-sm shrink-0">
         <button
-          v-for="opt in [['topic','Per topic'],['industry','Per industria']]" :key="opt[0]"
+          v-for="opt in [['topic','By topic'],['industry','By industry']]" :key="opt[0]"
           class="px-3 py-1"
-          :class="viewMode === opt[0] ? 'bg-indigo-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50'"
+          :class="viewMode === opt[0] ? 'bg-[#6d48b5] text-white' : 'bg-white text-slate-700 hover:bg-slate-50'"
           @click="viewMode = opt[0]"
         >{{ opt[1] }}</button>
       </div>
@@ -368,9 +373,9 @@ watch(() => filterStore.selectedTopic, () => draw())
         <span class="text-slate-500 w-24 shrink-0">Show</span>
         <div class="flex gap-1">
           <button
-            v-for="opt in [['both','Entrambi'],['person','Persone'],['organization','Organizzazioni']]" :key="opt[0]"
+            v-for="opt in [['both','Both'],['person','People'],['organization','Organizations']]" :key="opt[0]"
             class="px-2.5 py-1 rounded-md border"
-            :class="entityTypeFilter === opt[0] ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-300 hover:bg-slate-50'"
+            :class="entityTypeFilter === opt[0] ? 'bg-slate-200 text-slate-900 border-slate-300 font-medium' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'"
             @click="entityTypeFilter = opt[0]"
           >{{ opt[1] }}</button>
         </div>
@@ -382,7 +387,7 @@ watch(() => filterStore.selectedTopic, () => draw())
           <button
             v-for="ind in ALL_INDUSTRIES" :key="ind"
             class="px-2.5 py-1 rounded-full border text-xs"
-            :class="selectedIndustries.has(ind) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
+            :class="selectedIndustries.has(ind) ? 'bg-[#6d48b5] text-white border-[#6d48b5]' : 'bg-white border-slate-300 hover:bg-slate-50'"
             @click="toggleIndustry(ind)"
           >{{ ind }}</button>
         </div>

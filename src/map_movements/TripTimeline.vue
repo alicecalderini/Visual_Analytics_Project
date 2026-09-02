@@ -16,7 +16,7 @@ const containerRef = ref(null)
 const wrapperRef = ref(null)
 const svgWidth = ref(1040) 
 
-const AVATAR_COLOR = '#b63576'
+const AVATAR_COLOR = '#185ead'
 
 function fixDate(dateStr) {
   if (!dateStr) return dateStr
@@ -135,8 +135,8 @@ function draw() {
           </div>`).join('')
       tooltip.style('opacity', 1).html(
         `<div style="font-weight:700;">${d.name || d.id}</div>` +
-        `<div style="color:#94a3b8;font-size:11px;margin-bottom:2px;">tappe per zona</div>` +
-        (rows || '<div>nessuna tappa nota</div>'),
+        `<div style="color:#94a3b8;font-size:11px;margin-bottom:2px;">Stops by zone</div>` +
+        (rows || '<div>no step known.</div>'),
       )
     })
     .on('mousemove', (event) => tooltip.style('left', `${event.clientX + 14}px`).style('top', `${event.clientY + 14}px`))
@@ -172,7 +172,7 @@ function draw() {
     .attr('y', (d) => y(d.person_id) + y.bandwidth() / 2 - 12)
     .attr('height', 24)
     .attr('rx', 1.5)
-    .attr('fill', '#b63576')
+    .attr('fill', '#185ead')
     .attr('stroke', (d) => (d.id === filterStore.selectedTrip ? '#f59e0b' : 'none'))
     .attr('stroke-width', (d) => (d.id === filterStore.selectedTrip ? 2 : 0))
     .attr('opacity', (d) => (isDimmed(d) ? 0.2 : 0.85))
@@ -204,7 +204,7 @@ watch([visibleTrips, svgWidth, () => filterStore.selectedPerson, () => filterSto
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
     <h2 class="font-semibold text-lg mb-1">Trips in time</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>

@@ -100,25 +100,28 @@ function draw() {
   }
   function hideTooltip() { tooltip.style('opacity', 0) }
 
-  const ISLAND_PALETTE = ['#bfdbfe', '#fde68a', '#bbf7d0', '#ddd6fe', '#fbcfe8', '#fed7aa', '#a5f3fc', '#fecaca', '#d9f99d', '#e9d5ff']
+  const ISLAND_PALETTE = ['#bfdbfe', '#ddd6fe', '#bbf7d0', '#a5f3fc']
+  const ISLAND_STROKE = ['#93c5fd', '#c4b5fd', '#86efac', '#67e8f9']
   const polygons = geo.value.features.filter((f) => f.geometry.type === 'Polygon')
-  const islandColor = d3.scaleOrdinal().domain(polygons.map((p) => p.properties.Name)).range(ISLAND_PALETTE)
+  const islandFill = d3.scaleOrdinal().domain(polygons.map((p) => p.properties.Name)).range(ISLAND_PALETTE)
+  const islandStroke = d3.scaleOrdinal().domain(polygons.map((p) => p.properties.Name)).range(ISLAND_STROKE)
 
   zoomG.selectAll('path.island')
     .data(polygons).join('path')
     .attr('class', 'island')
     .attr('d', path)
-    .attr('fill', (d) => islandColor(d.properties.Name))
-    .attr('stroke', '#94a3b8')
+    .attr('fill', (d) => islandFill(d.properties.Name))
+    .attr('fill-opacity', 0.35)
+    .attr('stroke', (d) => islandStroke(d.properties.Name))
     .attr('stroke-width', 1)
     .style('cursor', 'pointer')
     .on('mouseenter', function (event, d) {
-      d3.select(this).attr('stroke', '#334155').attr('stroke-width', 2)
+      d3.select(this).attr('fill-opacity', 0.6).attr('stroke-width', 1.8)
       showIslandTooltip(event, d)
     })
     .on('mousemove', moveTooltip)
     .on('mouseleave', function () {
-      d3.select(this).attr('stroke', '#94a3b8').attr('stroke-width', 1)
+      d3.select(this).attr('fill-opacity', 0.35).attr('stroke-width', 1)
       hideTooltip()
     })
     
@@ -185,15 +188,16 @@ watch([visiblePlaces, selectedTripRoute, mapWidth], () => draw())
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
     <div class="flex items-center justify-between mb-1">
-      <h2 class="font-semibold text-lg">Mappa</h2>
+      <h2 class="font-semibold text-lg">Map</h2>
       <div class="flex items-center gap-4">
         <span v-if="filterStore.selectedTrip" class="text-sm text-slate-500">
           percorso: <b>{{ filterStore.selectedTrip }}</b>
-          <button class="text-indigo-600 hover:underline ml-1" @click="filterStore.selectedTrip = null">✕</button>
+          <button class="text-[#185ead] hover:underline ml-1" @click="filterStore.selectedTrip = null">✕</button>
         </span>
-        <button class="text-sm text-indigo-600 hover:underline" @click="resetZoom">Reset zoom</button>
+
+          <button class="text-sm text-[#185ead] hover:underline" @click="resetZoom">reimposta zoom</button>
       </div>
     </div>
     <p class="text-sm text-slate-400 mb-3">

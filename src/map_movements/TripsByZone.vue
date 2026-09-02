@@ -45,11 +45,11 @@ function toggleZone(z) {
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
     <h2 class="font-semibold text-lg mb-1">Stops by zone</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
-      <span v-if="filterStore.selectedPerson"> — solo <b>{{ filterStore.selectedPerson }}</b></span>
+      <span v-if="filterStore.selectedPerson"> — only <b>{{ filterStore.selectedPerson }}</b></span>
       · click a zone to highlight it below
     </p>
 

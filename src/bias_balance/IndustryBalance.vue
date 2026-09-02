@@ -130,13 +130,13 @@ function barWidth(total, maxAbs) {
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
     <h2 class="text-lg font-semibold mb-4">Weighing the bias among industries</h2>
 
     <div class="flex items-center gap-3 mb-5 text-sm">
       <span class="text-slate-500">Show</span>
       <button
-        v-for="opt in [['both','Entrambi'],['person','Persone'],['organization','Organizzazioni']]" :key="opt[0]"
+        v-for="opt in [['both','Both'],['person','People'],['organization','Organizations']]" :key="opt[0]"
         class="px-2.5 py-1 rounded-md border"
         :class="entityTypeFilter === opt[0]
           ? 'bg-slate-200 text-slate-900 border-slate-300 font-medium'
@@ -153,7 +153,7 @@ function barWidth(total, maxAbs) {
             <button
               v-for="c in row" :key="'a' + c"
               class="px-2.5 py-1 rounded-full border text-xs capitalize"
-              :class="groupA.has(c) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
+              :class="groupA.has(c) ? 'bg-[#7f94d4] text-white border-[#7f94d4]' : 'bg-white border-slate-300 hover:bg-slate-50'"
               @click="toggleCategory('A', c)"
             >{{ c }}</button>
           </div>
@@ -166,7 +166,7 @@ function barWidth(total, maxAbs) {
             <button
               v-for="c in row" :key="'b' + c"
               class="px-2.5 py-1 rounded-full border text-xs capitalize"
-              :class="groupB.has(c) ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border-slate-300 hover:bg-slate-50'"
+              :class="groupB.has(c) ? 'bg-[#b37fd4] text-white border-[#b37fd4]' : 'bg-white border-slate-300 hover:bg-slate-50'"
               @click="toggleCategory('B', c)"
             >{{ c }}</button>
           </div>
@@ -188,8 +188,8 @@ function barWidth(total, maxAbs) {
               :title="it.name"
               class="w-28 text-sm text-right truncate shrink-0 transition-colors"
               :class="selected?.entityId === it.entityId && selected?.group === 'A'
-                ? 'font-semibold text-indigo-700'
-                : 'text-slate-600 group-hover:text-indigo-600'"
+              ? 'font-semibold text-[#185ead]'
+              : 'text-slate-600 group-hover:text-[#185ead]'"
             >{{ it.name }}</span>
             <span class="flex-1 h-4 bg-slate-100 rounded overflow-hidden relative">
               <span
@@ -215,8 +215,8 @@ function barWidth(total, maxAbs) {
               :title="it.name"
               class="w-28 text-sm text-right truncate shrink-0 transition-colors"
               :class="selected?.entityId === it.entityId && selected?.group === 'B'
-                ? 'font-semibold text-indigo-700'
-                : 'text-slate-600 group-hover:text-indigo-600'"
+              ? 'font-semibold text-[#185ead]'
+              : 'text-slate-600 group-hover:text-[#185ead]'"
             >{{ it.name }}</span>
             <span class="flex-1 h-4 bg-slate-100 rounded overflow-hidden relative">
               <span

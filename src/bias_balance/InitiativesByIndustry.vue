@@ -5,9 +5,9 @@ import * as d3 from 'd3'
 import { getInitiativeParticipants } from '../shared/dataManager'
 
 const DATASETS = [
-  { key: 'journalist', label: 'journalist', color: '#6E8B3D' },
-  { key: 'FILAH', label: 'FILAH', color: '#1f77b4' },
-  { key: 'TROUT', label: 'TROUT', color: '#ff7f0e' },
+  { key: 'journalist', label: 'journalist', color: '#78716c' },
+  { key: 'FILAH', label: 'FILAH', color: '#0d9488' },
+  { key: 'TROUT', label: 'TROUT', color: '#db2777' },
 ]
 
 const props = defineProps({ aggregateFishing: { type: Boolean, default: false } })
@@ -129,7 +129,7 @@ function draw() {
     .attr('rx', 2)
     .attr('fill', (d) => d.color)
     .on('mouseenter', (event, d) => {
-      tooltip.style('opacity', 1).html(`<b>${d.label}</b><br/>${d.category}: ${d.value} iniziative`)
+      tooltip.style('opacity', 1).html(`<b>${d.label}</b><br/>${d.category}: ${d.value} initiatives`)
     })
     .on('mousemove', (event) => tooltip.style('left', `${event.clientX + 12}px`).style('top', `${event.clientY + 12}px`))
     .on('mouseleave', () => tooltip.style('opacity', 0))
@@ -139,7 +139,7 @@ watch([counts, svgWidth], () => nextTick(draw))
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
     <h2 class="text-lg font-semibold mb-1">Initiatives by industries and dataset</h2>
  
 

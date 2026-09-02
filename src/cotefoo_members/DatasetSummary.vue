@@ -53,7 +53,7 @@ const summary = computed(() => {
 
 <template>
 
-  <div class="border border-slate-200 rounded-lg p-4 w-full">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
   
   <h2 class="font-semibold text-lg mb-1">Heatmap insights</h2>
   <p class="text-sm text-slate-400 mb-4">

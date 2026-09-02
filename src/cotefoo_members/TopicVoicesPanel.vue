@@ -34,7 +34,7 @@ function sentimentColor(s) {
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4 w-[420px] shrink-0">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
     <h2 class="font-semibold text-lg mb-1">Who says that?</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>

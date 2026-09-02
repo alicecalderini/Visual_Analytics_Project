@@ -78,15 +78,18 @@ function draw() {
     .attr('y1', margin.top).attr('y2', height - margin.bottom)
     .attr('stroke', '#cbd5e1')
 
-  const row = svg.selectAll('g.row')
+    const row = svg.selectAll('g.row')
     .data(data, (d) => d.topicId)
     .join('g')
     .attr('class', 'row')
     .attr('transform', (d) => `translate(0,${y(d.topicId)})`)
     .style('cursor', 'pointer')
-    .on('mouseenter click', (_, d) => { filterStore.selectedTopic = d.topicId })
-
-  row.append('text')
+    .on('mouseenter', (event, d) => {
+      if (event.movementX !== 0 || event.movementY !== 0) filterStore.selectedTopic = d.topicId
+    })
+    .on('click', (_, d) => { filterStore.selectedTopic = filterStore.selectedTopic === d.topicId ? null : d.topicId })
+  
+    row.append('text')
     .attr('x', margin.left - 10)
     .attr('y', y.bandwidth() / 2)
     .attr('dy', '0.32em')
@@ -119,7 +122,7 @@ watch([topicAverages, () => filterStore.selectedTopic], () => nextTick(draw))
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
     <h2 class="font-semibold text-lg mb-1">Average sentiment by topic</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>

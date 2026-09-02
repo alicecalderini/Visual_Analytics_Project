@@ -162,7 +162,7 @@ function draw() {
     .attr('y', (d) => y(d.value))
     .attr('height', (d) => y(0) - y(d.value))
     .attr('rx', 4)
-    .attr('fill', '#4f46e5')
+    .attr('fill', '#185ead')
 
   svg.selectAll('text.value')
     .data(stats.value.counts)
@@ -181,7 +181,7 @@ watch([stats, globalMax], () => nextTick(draw))
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-lg p-4">
+  <div class="border border-slate-200 rounded-lg shadow-sm p-4">
     <h2 class="font-semibold text-lg mb-1">Activities of selected person</h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
@@ -204,8 +204,8 @@ watch([stats, globalMax], () => nextTick(draw))
             <div class="flex flex-wrap gap-1.5">
               <button
                 v-for="t in g.topics" :key="t"
-                class="px-2.5 py-1 rounded-full border text-sm hover:bg-slate-50"
-                :class="filterStore.selectedTopic === t ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-300'"
+                class="px-2.5 py-1 rounded-full border text-sm focus:outline-none"
+                :class="filterStore.selectedTopic === t ? 'bg-[#6d48b5] text-white border-[#6d48b5] hover:bg-[#6d48b5]' : 'bg-white border-slate-300 hover:bg-slate-50'"
                 @click="filterStore.selectedTopic = filterStore.selectedTopic === t ? null : t"
               >{{ readableLabel(topicLabel.get(t) || t) }}</button>
             </div>
