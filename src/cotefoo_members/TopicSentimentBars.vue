@@ -78,18 +78,25 @@ function draw() {
     .attr('y1', margin.top).attr('y2', height - margin.bottom)
     .attr('stroke', '#cbd5e1')
 
-    const row = svg.selectAll('g.row')
+  const row = svg.selectAll('g.row')
     .data(data, (d) => d.topicId)
     .join('g')
     .attr('class', 'row')
     .attr('transform', (d) => `translate(0,${y(d.topicId)})`)
     .style('cursor', 'pointer')
-    .on('mouseenter', (event, d) => {
-      if (event.movementX !== 0 || event.movementY !== 0) filterStore.selectedTopic = d.topicId
-    })
-    .on('click', (_, d) => { filterStore.selectedTopic = filterStore.selectedTopic === d.topicId ? null : d.topicId })
-  
-    row.append('text')
+    .on('mouseenter', (_, d) => { filterStore.selectedTopic = d.topicId })
+    .on('mouseleave', () => { filterStore.selectedTopic = null })
+
+  // rettangolo invisibile a tutta larghezza/altezza della riga: senza questo,
+  // il <g> (che non ha un fill proprio) cattura l'hover solo sopra le forme
+  // effettivamente disegnate (testo/barra), lasciando "buchi" non sensibili
+  // al passaggio del mouse nella fascia della riga
+  row.append('rect')
+    .attr('x', 0).attr('width', width)
+    .attr('y', 0).attr('height', y.bandwidth())
+    .attr('fill', 'transparent')
+
+  row.append('text')
     .attr('x', margin.left - 10)
     .attr('y', y.bandwidth() / 2)
     .attr('dy', '0.32em')

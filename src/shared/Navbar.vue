@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 
 const links = [
   { to: '/', label: 'COOTEFOO Members' },
-  { to: '/map', label: 'Mappa & Movements' },
+  { to: '/map', label: 'Map & Movements' },
   { to: '/balance', label: 'Weigh-in' },
 ]
 </script>

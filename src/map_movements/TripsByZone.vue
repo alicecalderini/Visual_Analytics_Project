@@ -61,9 +61,9 @@ function toggleZone(z) {
         @click="toggleZone(c.zone)"
       >
         <span
-          class="w-28 text-sm text-left capitalize shrink-0"
-          :class="filterStore.selectedZone === c.zone ? 'font-semibold text-slate-900' : 'text-slate-600'"
-        >{{ c.zone }}</span>
+        class="w-28 text-sm text-left capitalize shrink-0 transition-colors"
+        :class="filterStore.selectedZone === c.zone ? 'font-semibold text-slate-900' : 'text-slate-600 group-hover:text-slate-900 group-hover:font-medium'"
+      >{{ c.zone }}</span>
         <span class="flex-1 h-4 bg-slate-100 rounded overflow-hidden">
           <span
             class="block h-full rounded transition-all"

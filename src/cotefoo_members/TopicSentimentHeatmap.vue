@@ -17,6 +17,7 @@ const ALL_INDUSTRIES = ['small vessel', 'large vessel', 'tourism', 'unclassified
 const selectedIndustries = ref(new Set(ALL_INDUSTRIES))
 
 const containerRef = ref(null)
+let suppressHoverUntil = 0
 const BASE_TOP = 40
 const BASE_RIGHT = 10
 const BASE_LEFT = 20
@@ -152,6 +153,7 @@ function draw() {
 
 async function runDraw() {
   if (!containerRef.value) return
+  suppressHoverUntil = Date.now() + 80
   const rowsD = rowIds.value
   const cols = colIds.value
   const svg = d3.select(containerRef.value).style('overflow', 'visible')
@@ -180,31 +182,40 @@ async function runDraw() {
     const color = d3.scaleSequential(d3.interpolateRdYlGn).domain([-1, 1])
 
       svg.selectAll(null).data(cols).enter().append('text')
-      .attr('class', 'col-label')
+      .attr('class', (d) => (colRotate ? 'col-label col-label-topic' : 'col-label'))
       .attr('text-anchor', colRotate ? 'start' : 'middle')
       .style('font-size', colFontSize).style('cursor', colRotate ? 'pointer' : 'default')
-      .on('mouseenter', (event, d) => {
-        if (colRotate && (event.movementX !== 0 || event.movementY !== 0)) filterStore.selectedTopic = d
+      .on('mouseenter', function (event, d) {
+        if (colRotate && Date.now() > suppressHoverUntil) d3.select(this).style('fill', '#6d48b5')
+      })
+      .on('mouseleave', function (event, d) {
+        if (colRotate) d3.select(this).style('fill', filterStore.selectedTopic === d ? '#6d48b5' : '#334155')
       })
       .on('click', (event, d) => { if (colRotate) filterStore.selectedTopic = filterStore.selectedTopic === d ? null : d })
       .attr('transform', (d) => (colRotate
         ? `translate(${x(d) + x.bandwidth() / 2},${m.top - 8}) rotate(-55)`
         : `translate(${x(d) + x.bandwidth() / 2},${m.top - 12})`))
-        .style('fill', (d) => (colRotate && filterStore.selectedTopic === d ? '#6d48b5' : '#334155'))     
-        .style('font-weight', (d) => (colRotate && filterStore.selectedTopic === d ? 700 : 400))
+      .style('fill', (d) => (colRotate && filterStore.selectedTopic === d ? '#6d48b5' : '#334155'))
+      .style('font-weight', (d) => (colRotate && filterStore.selectedTopic === d ? 700 : 400))
       .text((d) => readableLabel(d))
 
     svg.selectAll(null).data(blockRows).enter().append('text')
-      .attr('class', 'row-label')
-      .attr('text-anchor', 'end')
-      .attr('x', rowLabelX)
-      .attr('y', (d) => y(d) + y.bandwidth() / 2)
-      .attr('dy', '0.32em')
-      .style('font-size', rowFontSize).style('cursor', 'pointer')
-      .style('fill', (d) => (filterStore.selectedPerson === d ? '#185ead' : '#334155'))
-      .style('font-weight', (d) => (filterStore.selectedPerson === d ? 700 : 400))
-      .on('click', (event, d) => selectEntity(d))
-      .text((d) => readableLabel(d))
+    .attr('class', 'row-label')
+    .attr('text-anchor', 'end')
+    .attr('x', rowLabelX)
+    .attr('y', (d) => y(d) + y.bandwidth() / 2)
+    .attr('dy', '0.32em')
+    .style('font-size', rowFontSize).style('cursor', 'pointer')
+    .style('fill', (d) => (filterStore.selectedPerson === d ? '#185ead' : '#334155'))
+    .style('font-weight', (d) => (filterStore.selectedPerson === d ? 700 : 400))
+    .on('mouseenter', function (event, d) {
+      if (Date.now() > suppressHoverUntil && filterStore.selectedPerson !== d) d3.select(this).style('fill', '#185ead')
+    })
+    .on('mouseleave', function (event, d) {
+      d3.select(this).style('fill', filterStore.selectedPerson === d ? '#185ead' : '#334155')
+    })
+    .on('click', (event, d) => selectEntity(d))
+    .text((d) => d)
 
     const blockCells = cells.value.filter((c) => blockRows.includes(c.entityId))
     svg.selectAll(null).data(blockCells).enter().append('rect')
@@ -217,7 +228,7 @@ async function runDraw() {
       .style('fill', (d) => (d.isNull ? '#e2e8f0' : color(d.sentiment)))
       .style('cursor', 'pointer')
       .on('mouseenter', (event, d) => {
-        const sentimentText = d.isNull ? 'non disponibile (partecipazione nota, dato mancante)' : d.sentiment.toFixed(2)
+        const sentimentText = d.isNull ? 'not available (participation confirmed, sentiment not recorded)' : d.sentiment.toFixed(2)
         tooltip.style('opacity', 1).html(
           `<b>${d.entityId}</b><br/>${readableLabel(d.colId)}<br/>sentiment: ${sentimentText}` +
           (d.reason ? `<br/><i>${d.reason}</i>` : ''),
@@ -343,7 +354,12 @@ async function runDraw() {
 
 watch([viewMode, entityTypeFilter, selectedIndustries, () => filterStore.activeDataset], () => draw())
 watch(() => filterStore.selectedPerson, () => draw())
-watch(() => filterStore.selectedTopic, () => draw())
+watch(() => filterStore.selectedTopic, (topic) => {
+  if (!containerRef.value) return
+  d3.select(containerRef.value).selectAll('text.col-label-topic')
+    .style('fill', function (d) { return topic === d ? '#6d48b5' : '#334155' })
+    .style('font-weight', function (d) { return topic === d ? 700 : 400 })
+})
 </script>
 
 <template>

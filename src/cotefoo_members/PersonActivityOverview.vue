@@ -78,10 +78,10 @@ function statsFor(person, dataset) {
 
   return {
     counts: [
-      { label: 'Iniziative', value: initIds.length },
-      { label: 'Topic', value: topicIds.length },
-      { label: 'Meeting', value: meetingIds.length },
-      { label: 'Viaggi', value: myTrips.length },
+      { label: 'Initiatives', value: initIds.length },
+      { label: 'Topics', value: topicIds.length },
+      { label: 'Meetings', value: meetingIds.length },
+      { label: 'Trips', value: myTrips.length },
     ],
     topicIds,
     meetingIds: meetingIds.sort(),
