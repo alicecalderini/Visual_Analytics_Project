@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { filterStore, resetSelection } from './filterStore'
+import { filterStore } from './filterStore'
 import { getPersons } from './dataManager'
 
 const props = defineProps({ 
@@ -53,24 +53,15 @@ function selectPerson(id) {
     </div>
 
     <div v-if="props.showPersonFilter">
-      <div class="flex items-center justify-between mb-2">
-        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Person</h3>
-        <button
-            v-if="filterStore.selectedPerson"
-            class="text-xs text-[#185ead] hover:underline"
-            @click="resetSelection"
-          >
-            reset
-          </button>
-      </div>
+      <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Person</h3>
       <div class="flex flex-col gap-1">
-       <button
+        <button
           v-for="p in sortedPersons"
           :key="p.id"
           class="px-3 py-1.5 rounded-md border text-sm text-left"
           :class="filterStore.selectedPerson === p.id
-          ? 'bg-[#185ead] text-white border-[#185ead]'
-          : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'"
+            ? 'bg-[#185ead] text-white border-[#185ead]'
+            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'"
           @click="selectPerson(p.id)"
         >
           {{ p.name || p.id }}

@@ -8,9 +8,3 @@ export const filterStore = reactive({
   selectedZone: null,
   selectedTrip: null,
 })
-
-export function resetSelection() {
-  filterStore.selectedPerson = null
-  filterStore.selectedTopic = null
-  filterStore.selectedMeetingRange = null
-}

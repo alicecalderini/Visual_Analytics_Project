@@ -182,15 +182,16 @@ watch([stats, globalMax], () => nextTick(draw))
 
 <template>
   <div class="border border-slate-200 rounded-lg shadow-sm p-4">
-    <h2 class="font-semibold text-lg mb-1">Activities of selected person</h2>
+    <h2 class="font-semibold text-lg mb-1">
+      Activities of selected entity<span v-if="filterStore.selectedPerson">: {{ filterStore.selectedPerson }}</span>
+    </h2>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
-  
     </p>
 
     <div v-if="loading" class="text-slate-400 text-sm">Loading...</div>
     <div v-else-if="!filterStore.selectedPerson" class="text-slate-400 text-sm py-8 text-center">
-      Select a person to see details.
+      Select a person or organization to see details.
     </div>
     <template v-else>
       <div class="flex flex-wrap gap-8">

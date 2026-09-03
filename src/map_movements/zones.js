@@ -1,5 +1,3 @@
-// Colori condivisi per le 6 categorie di "zone" presenti in places.json,
-// usati coerentemente da TripsByZone, TripTimeline e OceanusMap.
 export const ZONE_COLORS = {
   government: '#61bdf3',
   commercial: '#e5829b',

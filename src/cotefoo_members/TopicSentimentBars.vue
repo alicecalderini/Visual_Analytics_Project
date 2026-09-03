@@ -1,4 +1,19 @@
 <script setup>
+/**
+ * Replaces BAIT's "Topic Sentiment Overview": diverging horizontal bars,
+ * average sentiment per topic on the active dataset. Also (BAIT doesn't do
+ * this): if a person is selected, a marker shows THEIR position on that
+ * topic, so it's immediately clear whether they align with the committee
+ * average or are an outlier.
+ *
+ * Interaction: hover SELECTS a topic and it stays selected even after the
+ * mouse leaves (it does not clear itself). A "Reset" button clears it
+ * explicitly. We deliberately don't use click-to-clear here: after a click,
+ * if the mouse stayed still over the same bar, the redraw could regenerate
+ * a "phantom" mouseenter under a stationary cursor and immediately
+ * re-select what the click had just removed - a real, reproduced bug.
+ * A dedicated button sidesteps that whole class of issues.
+ */
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
 import { filterStore } from '../shared/filterStore'
@@ -85,12 +100,7 @@ function draw() {
     .attr('transform', (d) => `translate(0,${y(d.topicId)})`)
     .style('cursor', 'pointer')
     .on('mouseenter', (_, d) => { filterStore.selectedTopic = d.topicId })
-    .on('mouseleave', () => { filterStore.selectedTopic = null })
 
-  // rettangolo invisibile a tutta larghezza/altezza della riga: senza questo,
-  // il <g> (che non ha un fill proprio) cattura l'hover solo sopra le forme
-  // effettivamente disegnate (testo/barra), lasciando "buchi" non sensibili
-  // al passaggio del mouse nella fascia della riga
   row.append('rect')
     .attr('x', 0).attr('width', width)
     .attr('y', 0).attr('height', y.bandwidth())
@@ -130,7 +140,14 @@ watch([topicAverages, () => filterStore.selectedTopic], () => nextTick(draw))
 
 <template>
   <div class="border border-slate-200 rounded-lg shadow-sm p-4">
-    <h2 class="font-semibold text-lg mb-1">Average sentiment by topic</h2>
+    <div class="flex items-center justify-between mb-1">
+      <h2 class="font-semibold text-lg">Average sentiment by topic</h2>
+      <button
+        v-if="filterStore.selectedTopic"
+        class="text-xs text-slate-500 hover:text-slate-700 hover:underline"
+        @click="filterStore.selectedTopic = null"
+      >Reset</button>
+    </div>
     <p class="text-sm text-slate-400 mb-3">
       Dataset: <b>{{ filterStore.activeDataset }}</b>
       <span v-if="filterStore.selectedPerson"> — white circle = position of <b>{{ filterStore.selectedPerson }}</b></span>

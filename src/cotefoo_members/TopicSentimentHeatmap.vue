@@ -364,7 +364,7 @@ watch(() => filterStore.selectedTopic, (topic) => {
 
 <template>
   <div
-  class="border border-slate-200 rounded-lg py-4"
+  class="border border-slate-200 rounded-lg shadow-sm py-4"
   :class="viewMode === 'topic' ? 'px-10' : 'px-4'"
 >
     <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
