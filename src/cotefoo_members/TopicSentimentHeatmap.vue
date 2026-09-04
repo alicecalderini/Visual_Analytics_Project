@@ -229,6 +229,7 @@ async function runDraw() {
       .attr('height', y.bandwidth())
       .attr('rx', 3)
       .style('fill', (d) => (d.isNull ? '#e2e8f0' : color(d.sentiment)))
+      .style('opacity', (d) => (filterStore.selectedPerson && d.entityId !== filterStore.selectedPerson ? 0.35 : 1))
       .style('cursor', 'pointer')
       .on('mouseenter', (event, d) => {
         const sentimentText = d.isNull ? 'not available (participation confirmed, sentiment not recorded)' : d.sentiment.toFixed(2)
