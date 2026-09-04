@@ -230,6 +230,8 @@ async function runDraw() {
       .attr('rx', 3)
       .style('fill', (d) => (d.isNull ? '#e2e8f0' : color(d.sentiment)))
       .style('opacity', (d) => (filterStore.selectedPerson && d.entityId !== filterStore.selectedPerson ? 0.35 : 1))
+      .style('stroke', (d) => (d.entityId === filterStore.selectedPerson ? '#0f172a' : 'none'))
+      .style('stroke-width', 0.7)
       .style('cursor', 'pointer')
       .on('mouseenter', (event, d) => {
         const sentimentText = d.isNull ? 'not available (participation confirmed, sentiment not recorded)' : d.sentiment.toFixed(2)
