@@ -20,3 +20,11 @@ npm install
 npm run dev       
 npm run build      
 ```
+## Troubleshooting
+
+If `npm run dev` fails with an error related to `@rollup/rollup-*` (a known npm bug with optional dependencies, see [npm/cli#4828](https://github.com/npm/cli/issues/4828)), run:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
