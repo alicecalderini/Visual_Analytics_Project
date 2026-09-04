@@ -222,10 +222,10 @@ watch([stats, globalMax], () => nextTick(draw))
           <li v-for="init in stats.initiativeDetails" :key="init.id" class="text-base border-b border-slate-100 pb-3">
             <div class="font-medium">{{ init.title }}</div>
             <div class="text-sm text-slate-500 mt-1 leading-relaxed">
-              <div>stato: <b class="text-slate-600">{{ readableLabel(init.status) || 'n/d' }}</b></div>
-              <div v-if="init.meetingId">parte di <b class="text-slate-600">{{ readableLabel(init.meetingId) }}</b></div>
+              <div>status: <b class="text-slate-600">{{ readableLabel(init.status) || 'n/d' }}</b></div>
+              <div v-if="init.meetingId">part of <b class="text-slate-600">{{ readableLabel(init.meetingId) }}</b></div>
               <div>topic <b class="text-slate-600">{{ readableLabel(topicLabel.get(init.topicId) || init.topicId) }}</b></div>
-              <div v-if="init.others.length">con {{ init.others.join(', ') }}</div>
+              <div v-if="init.others.length">with {{ init.others.join(', ') }}</div>
             </div>
           </li>
         </ul>
