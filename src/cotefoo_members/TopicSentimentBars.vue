@@ -1,19 +1,5 @@
 <script setup>
-/**
- * Replaces BAIT's "Topic Sentiment Overview": diverging horizontal bars,
- * average sentiment per topic on the active dataset. Also (BAIT doesn't do
- * this): if a person is selected, a marker shows THEIR position on that
- * topic, so it's immediately clear whether they align with the committee
- * average or are an outlier.
- *
- * Interaction: hover SELECTS a topic and it stays selected even after the
- * mouse leaves (it does not clear itself). A "Reset" button clears it
- * explicitly. We deliberately don't use click-to-clear here: after a click,
- * if the mouse stayed still over the same bar, the redraw could regenerate
- * a "phantom" mouseenter under a stationary cursor and immediately
- * re-select what the click had just removed - a real, reproduced bug.
- * A dedicated button sidesteps that whole class of issues.
- */
+
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
 import { filterStore } from '../shared/filterStore'

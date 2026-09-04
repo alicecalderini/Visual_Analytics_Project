@@ -12,7 +12,6 @@ function makeLoader(fileName) {
   }
 }
 
-// --- Tabelle anagrafiche ---
 export const getPersons = makeLoader('persons.json')
 export const getOrganizations = makeLoader('organizations.json')
 export const getPlaces = makeLoader('places.json')

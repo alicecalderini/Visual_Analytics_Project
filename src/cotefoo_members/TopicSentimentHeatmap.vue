@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, onActivated, watch, nextTick } from 'vue'
 import * as d3 from 'd3'
 import { getInitiativeParticipants, getInitiatives, getPersons, getOrganizations } from '../shared/dataManager'
 import { filterStore } from '../shared/filterStore'
@@ -23,7 +23,7 @@ const BASE_RIGHT = 10
 const BASE_LEFT = 20
 const SPLIT_THRESHOLD = 7
 const TOPIC_CELL_W = 30.5
-const INDUSTRY_CELL_W = 88
+const INDUSTRY_CELL_W = 78
 const SPLIT_GAP_BASE = 40
 const ROW_H = 26 
 const TOPIC_ROW_H = 28.5 
@@ -39,6 +39,9 @@ onMounted(async () => {
   loading.value = false
   await nextTick()
   draw()
+})
+onActivated(() => {
+  if (!loading.value) nextTick(draw)
 })
 
 function industryOf(row) {
